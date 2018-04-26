@@ -1,5 +1,6 @@
 #!/bin/sh
-sed -rb 's/ {6}//g' $1 |
+
+sed -rb 's/ {2,}//g' $1 |
 sed -rb 's/\/\/.*$//g' |
 tr -d '\n' |
 sed -rb 's/\/\*.*\*\///g' |

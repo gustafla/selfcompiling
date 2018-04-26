@@ -16,3 +16,6 @@ Uint32 SDL_GetTicks(void);
 
 // EGL API
 void *eglGetProcAddress(const char *procname);
+
+// libGL.so API
+

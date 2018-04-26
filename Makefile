@@ -1,33 +1,53 @@
 TARGET=demo
-CAT_SRC=$(TARGET).cat.c
+CAT_SRC=$(TARGET).out.c
 CC=gcc
-MINIFY=cat
+MINIFY=sh minify.sh
+SHADER_MINIFY=TERM=xterm mono ~/misc/shader_minifier.exe --format none
 LFLAGS=-lSDL2 -lGL -lEGL
-SHADERS=$(patsubst %.glsl,%.glsl.h,$(wildcard shaders/*.glsl))
+SOURCES=main.c api.c
+MINIFIED=$(SOURCES:.c=.min)
+SHADERS=$(patsubst %.glsl, %.glsl.min.h.bin, $(wildcard shaders/*.glsl))
 
-demo: $(CAT_SRC) launcher.sh
+# Concatenate and compress demo sources into executable
+$(TARGET): $(CAT_SRC) launcher.sh
 	cp launcher.sh $(TARGET)
-	$(MINIFY) $(CAT_SRC) | lzma -9e -T0 - >> $(TARGET)
+	cat $(CAT_SRC) | lzma -9e -T0 - >> $(TARGET)
 	chmod +x $(TARGET)
-	rm $(CAT_SRC)
+
+.PHONY: debug clean
 
 debug: $(CAT_SRC)
 	$(CC) -g $(LFLAGS) -o $(TARGET) $(CAT_SRC)
-	rm $(CAT_SRC)
 
-$(CAT_SRC): shaders.h api.h main.c
-	cp api.h $(CAT_SRC)
-	cat shaders.h >> $(CAT_SRC)
-	cat main.c >> $(CAT_SRC)
-	rm shaders.h
+clean:
+	rm -f $(TARGET)
+	find . -name "*.bin" -delete
+	find . -name "*.min" -delete
+	find . -name "*.out.c" -delete
 
-shaders.h: $(SHADERS)
-	for f in shaders/*.h; do cat $$f >> shaders.h; done
-	rm shaders/*.h
+# Concatenate sources to single source file in the right order
+# THIS NEEDS TO BE UPDATED MANUALLY WITH EACH NEW SOURCE FILE
+$(CAT_SRC): shaders.h.bin $(MINIFIED)
+	cp api.min $(CAT_SRC)
+	cat shaders.h.bin >> $(CAT_SRC)
+	cat main.min >> $(CAT_SRC)
 
-shaders/%.glsl.h:
+# Minify source files
+%.min:
+	$(MINIFY) $*.c > $@
+
+# Concatenate minified shaders into one .h file
+shaders.h.bin: $(SHADERS)
+	echo > shaders.h.bin
+	for f in shaders/*.h.bin; do cat $$f >> shaders.h.bin; done
+
+# Minify and convert shaders to C source
+shaders/%.glsl.min.h.bin:
 	for f in shaders/*.glsl; do \
+	$(SHADER_MINIFY) -o "$$f.min" "$$f"; done
+	for f in shaders/*.glsl.min; do \
 	F=`echo $$f | tr ./ _ | tr '[:lower:]' '[:upper:]'`; \
-	echo "char const *$$F = \" \\" > "$$f.h"; \
-	cat $$f | sed 's/$$/ \\/' >> "$$f.h"; \
-	echo "\";" >> "$$f.h"; done
+	echo "char const *$$F = \" \\" > "$$f.h.bin"; \
+	cat $$f | sed 's/$$/ \\/' >> "$$f.h.bin"; \
+	echo >> "$$f.h.bin"; \
+	echo "\";" >> "$$f.h.bin"; done
