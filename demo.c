@@ -1,19 +1,20 @@
-/* SDL API declarations */
+#include <stdint.h>
 
-#define SDL_INIT_VIDEO 0x00000020
-#define SDL_WINDOW_FULLSCREEN 0x00000001
-#define SDL_WINDOW_OPENGL 0x00000002
+// SDL API
+typedef uint32_t Uint32;
+
+Uint32 SDL_INIT_VIDEO=0x00000020;
+Uint32 SDL_WINDOW_FULLSCREEN=0x00000001;
+Uint32 SDL_WINDOW_OPENGL=0x00000002;
 
 typedef struct SDL_Window SDL_Window;
-typedef uint32_t Uint32;
 
 int SDL_Init(Uint32 flags);
 SDL_Window *SDL_CreateWindow(const char *title, int x, int y,
         int w, int h, Uint32 flags);
 Uint32 SDL_GetTicks(void);
 
-/* main */
-
+// main
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_CreateWindow("testi", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
