@@ -1,7 +1,0 @@
-#include <stdint.h>
-uint32_t SDL_INIT_VIDEO=0x00000020;uint32_t SDL_WINDOW_FULLSCREEN=0x00000001;uint32_t SDL_WINDOW_OPENGL=0x00000002;uint32_t SDL_QUIT=0x100;uint32_t SDL_KEYDOWN=0x300;int32_t SDLK_ESCAPE='\033';typedef struct SDL_Window SDL_Window;typedef enum {SDL_GL_CONTEXT_MAJOR_VERSION=17,SDL_GL_CONTEXT_MINOR_VERSION=18,SDL_GL_CONTEXT_PROFILE_MASK=21} SDL_GLattr;typedef union SDL_Event {uint32_t type;uint8_t padding[56];} SDL_Event;int SDL_Init(uint32_t flags);SDL_Window *SDL_CreateWindow(const char *title, int x, int y, int w, int h, uint32_t flags);uint32_t SDL_GetTicks(void);int SDL_GL_SetAttribute(SDL_GLattr attr, int value);void *SDL_GL_CreateContext(SDL_Window *window);void SDL_GL_SwapWindow(SDL_Window *window);int SDL_PollEvent(SDL_Event *event);void *eglGetProcAddress(const char *procname);
-char const *SHADERS_TEST_GLSL_MIN = " \
-#version 330 \
-void main(){pow();} \
-";
-int main() {SDL_Init(SDL_INIT_VIDEO);SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 1);SDL_Window *w = SDL_CreateWindow("testi", 0, 0, 640, 480, SDL_WINDOW_OPENGL);SDL_GL_CreateContext(w);SDL_Event e;while(1) {SDL_GL_SwapWindow(w);SDL_PollEvent(&e);if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN) {break;}}return 0;}

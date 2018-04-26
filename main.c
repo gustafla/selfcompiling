@@ -15,6 +15,9 @@ int main() {
 
     SDL_Event e;
     while(1) {
+        glClearColor(1.f, 0.f, 0.f, 1.f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         SDL_GL_SwapWindow(w);
 
         SDL_PollEvent(&e);

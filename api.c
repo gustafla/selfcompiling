@@ -33,4 +33,7 @@ int SDL_PollEvent(SDL_Event *event);
 void *eglGetProcAddress(const char *procname);
 
 // libGL.so API
+unsigned GL_COLOR_BUFFER_BIT=0x00004000;
 
+void glClearColor(float r, float g, float b, float a);
+void glClear(unsigned mask);
