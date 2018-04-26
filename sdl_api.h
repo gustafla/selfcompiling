@@ -13,11 +13,3 @@ int SDL_Init(Uint32 flags);
 SDL_Window *SDL_CreateWindow(const char *title, int x, int y,
         int w, int h, Uint32 flags);
 Uint32 SDL_GetTicks(void);
-
-// main
-int main() {
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindow("testi", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
-    while (SDL_GetTicks() < 10000);
-    return 0;
-}
