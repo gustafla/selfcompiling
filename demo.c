@@ -5,11 +5,12 @@
 #define SDL_WINDOW_OPENGL 0x00000002
 
 typedef struct SDL_Window SDL_Window;
+typedef uint32_t Uint32;
 
-int SDL_Init(unsigned flags);
+int SDL_Init(Uint32 flags);
 SDL_Window *SDL_CreateWindow(const char *title, int x, int y,
-        int w, int h, unsigned flags);
-unsigned SDL_GetTicks(void);
+        int w, int h, Uint32 flags);
+Uint32 SDL_GetTicks(void);
 
 /* main */
 
