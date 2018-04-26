@@ -1,5 +1,5 @@
-// #include "sdl_api.h"
-// #include "egl_api.h"
+// These concatenations are done by the makefile
+// #include "api.h"
 // #include "shaders.h"
 
 // main
