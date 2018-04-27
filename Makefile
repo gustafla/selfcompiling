@@ -47,7 +47,7 @@ shaders/%.glsl.min.h.bin:
 	$(SHADER_MINIFY) -o "$$f.min" "$$f"; done
 	for f in shaders/*.glsl.min; do \
 	F=`echo $$f | tr ./ _ | tr '[:lower:]' '[:upper:]'`; \
-	echo "char const *$$F = \" \\" > "$$f.h.bin"; \
-	cat $$f | sed 's/$$/ \\/' >> "$$f.h.bin"; \
+	echo "char *$$F=\"\\" > "$$f.h.bin"; \
+	cat $$f | sed 's/$$/\\/' >> "$$f.h.bin"; \
 	echo >> "$$f.h.bin"; \
 	echo "\";" >> "$$f.h.bin"; done

@@ -1,39 +1,24 @@
 #include <stdint.h>
 
 // SDL API
-uint32_t SDL_INIT_VIDEO=0x00000020;
-uint32_t SDL_WINDOW_FULLSCREEN=0x00000001;
-uint32_t SDL_WINDOW_OPENGL=0x00000002;
-uint32_t SDL_QUIT=0x100;
-uint32_t SDL_KEYDOWN=0x300;
-int32_t SDLK_ESCAPE='\033';
+typedef struct SDL_Window W;
 
-typedef struct SDL_Window SDL_Window;
-
-typedef enum {
-    SDL_GL_CONTEXT_MAJOR_VERSION=17,
-    SDL_GL_CONTEXT_MINOR_VERSION=18,
-    SDL_GL_CONTEXT_PROFILE_MASK=21
-} SDL_GLattr;
-
-typedef union SDL_Event {
+typedef union {
     uint32_t type;
-    uint8_t padding[56];
-} SDL_Event;
+    uint8_t p[56];
+} E;
 
 int SDL_Init(uint32_t flags);
-SDL_Window *SDL_CreateWindow(const char *title, int x, int y, int w, int h, uint32_t flags);
+W *SDL_CreateWindow(const char *title, int x, int y, int w, int h, uint32_t flags);
 uint32_t SDL_GetTicks(void);
-int SDL_GL_SetAttribute(SDL_GLattr attr, int value);
-void *SDL_GL_CreateContext(SDL_Window *window);
-void SDL_GL_SwapWindow(SDL_Window *window);
-int SDL_PollEvent(SDL_Event *event);
+int SDL_GL_SetAttribute(char attr, int value);
+void *SDL_GL_CreateContext(W *window);
+void SDL_GL_SwapWindow(W *window);
+int SDL_PollEvent(E *event);
 
 // EGL API
-void *eglGetProcAddress(const char *procname);
+void *eglGetProcAddress(const char *name);
 
 // libGL.so API
-unsigned GL_COLOR_BUFFER_BIT=0x00004000;
-
 void glClearColor(float r, float g, float b, float a);
 void glClear(unsigned mask);
