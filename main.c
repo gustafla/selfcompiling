@@ -3,8 +3,8 @@
 // #include "shaders.h"
 
 int main() {
-    // SDL_INIT_VIDEO = 0x20
-    SDL_Init(32);
+    // SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10
+    SDL_Init(0x30);
 
     // MAJOR_VERSION = 17, MINOR_VERSION = 18, PROFILE_MASK = 21
     SDL_GL_SetAttribute(17, 3);
