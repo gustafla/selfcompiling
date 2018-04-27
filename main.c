@@ -27,9 +27,7 @@ int main() {
 
         SDL_PollEvent(&e);
         // SDL_QUIT = 0x100, SDL_KEYDOWN = 0x300
-        if (e.type == 0x100 || e.type == 0x300) {
-            break;
-        }
+        if (e.type == 0x100 || e.type == 0x300) break;
     }
 
     return 0;
