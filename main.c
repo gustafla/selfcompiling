@@ -12,6 +12,9 @@ int main() {
     W *w = SDL_CreateWindow("testi", 0, 0, 640, 480, 2);
     SDL_GL_CreateContext(w);
 
+    // Load OpenGL functions
+    gl();
+
     // Event struct
     E e;
     while(1) {
