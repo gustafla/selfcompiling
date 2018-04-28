@@ -4,8 +4,8 @@ CC=gcc
 MINIFY=sh minify.sh
 SHADER_MINIFY=TERM=xterm mono ~/misc/shader_minifier.exe --format none
 LFLAGS=-lSDL2 -lGL -lEGL
-SOURCES=main.c api.c
-MINIFIED=$(SOURCES:.c=.min)
+SOURCES=api.c main.c
+MINIFIED=$(SOURCES:.c=.c.min)
 SHADERS=$(patsubst %.glsl, %.glsl.min.h.bin, $(wildcard shaders/*.glsl))
 
 # Concatenate and compress demo sources into executable
@@ -26,14 +26,12 @@ clean:
 	find . -name "*.out.c" -delete
 
 # Concatenate sources to single source file in the right order
-# THIS NEEDS TO BE UPDATED MANUALLY WITH EACH NEW SOURCE FILE
 $(CAT_SRC): shaders.h.bin $(MINIFIED)
-	cp api.min $(CAT_SRC)
-	cat shaders.h.bin >> $(CAT_SRC)
-	cat main.min >> $(CAT_SRC)
+	cat shaders.h.bin > $(CAT_SRC)
+	for f in $(MINIFIED); do cat $$f >> $(CAT_SRC); done
 
 # Minify source files
-%.min:
+%.c.min:
 	$(MINIFY) $*.c > $@
 
 # Concatenate minified shaders into one .h file

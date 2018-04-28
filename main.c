@@ -1,7 +1,3 @@
-// These concatenations are done by the makefile
-// #include "api.h"
-// #include "shaders.h"
-
 int main() {
     // SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10
     SDL_Init(0x30);
