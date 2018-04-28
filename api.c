@@ -14,7 +14,7 @@ uint32_t SDL_GetTicks(void);
 int SDL_GL_SetAttribute(char, int);
 void *SDL_GL_CreateContext(W*);
 void SDL_GL_SwapWindow(W*);
-void *SDL_GL_GetProcAddress(const char* p);
+void *SDL_GL_GetProcAddress(const char*);
 int SDL_PollEvent(E*);
 
 // ------------------------------------ OpenGL API -----------------------------
@@ -30,5 +30,5 @@ void glClear(unsigned); // mask
 void glDrawArrays(unsigned, int, int); // mode, first, count
 void (*glGenBuffers)(unsigned, unsigned*); // size, buffers
 void gl() {
-    glGenBuffers = (void(*)(unsigned, unsigned*))SDL_GL_GetProcAddress("glGenBuffers");
+    glGenBuffers=(void(*)(unsigned, unsigned*))SDL_GL_GetProcAddress("glGenBuffers");
 }

@@ -10,9 +10,9 @@ int main() {
 
     // SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2
     W *w = SDL_CreateWindow("testi", 0, 0, 640, 480, 2);
-    SDL_GL_CreateContext(w);
+    SDL_GL_CreateContext(w); // SDL_GL_LoadLibrary, SDL_GL_MakeCurrent
 
-    // Load OpenGL functions
+    // Load OpenGL functions using SDL_GetProcAddress
     gl();
 
     // Event struct
