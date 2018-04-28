@@ -34,13 +34,25 @@ void glClearColor(float, float, float, float); // rgba
 void glClear(unsigned); // mask
 void glDrawArrays(unsigned, int, int); // mode, first, count
 
-// GetProcAddress calls
+// GetProcAddress function pointers
 // These could be implemented as short functions with custom names which call
 // the function directly from GetProcAddress. Consider it if size becomes scarce
 
 void (*glGenBuffers)(unsigned, unsigned*); // size, buffers
 void (*glBindBuffer)(unsigned, unsigned); // target, buffer
 void (*glBufferData)(unsigned, ptrdiff_t, const void*, unsigned);
+unsigned (*glCreateShader)(unsigned);
+void (*glShaderSource)(unsigned, int, const char**, const int*);
+void (*glCompileShader)(unsigned);
+void (*glGetShaderiv)(unsigned, unsigned, int*);
+void (*glGetShaderInfoLog)(unsigned, int, int*, char*);
+unsigned (*glCreateProgram)(void);
+void (*glAttachShader)(unsigned, unsigned);
+void (*glLinkProgram)(unsigned);
+void (*glGetProgramiv)(unsigned, unsigned, int*);
+void (*glGetProgramInfoLog)(unsigned, int, int*, char*);
+void (*glUseProgram)(unsigned);
+
 void gl() {
     glGenBuffers = (void(*)(unsigned, unsigned*))
         SDL_GL_GetProcAddress("glGenBuffers");
@@ -48,4 +60,26 @@ void gl() {
         SDL_GL_GetProcAddress("glBindBuffer");
     glBufferData = (void(*)(unsigned, ptrdiff_t, const void*, unsigned))
         SDL_GL_GetProcAddress("glBufferData");
+    glCreateShader = (unsigned(*)(unsigned))
+        SDL_GL_GetProcAddress("glCreateShader");
+    glShaderSource = (void(*)(unsigned, int, const char**, const int*))
+        SDL_GL_GetProcAddress("glShaderSource");
+    glCompileShader = (void(*)(unsigned))
+        SDL_GL_GetProcAddress("glCompileShader");
+    glGetShaderiv = (void(*)(unsigned, unsigned, int*))
+        SDL_GL_GetProcAddress("glGetShaderiv");
+    glGetShaderInfoLog = (void(*)(unsigned, int, int*, char*))
+        SDL_GL_GetProcAddress("glGetShaderInfoLog");
+    glCreateProgram = (unsigned(*)(void))
+        SDL_GL_GetProcAddress("glCreateProgram");
+    glAttachShader = (void(*)(unsigned, unsigned))
+        SDL_GL_GetProcAddress("glAttachShader");
+    glLinkProgram = (void(*)(unsigned))
+        SDL_GL_GetProcAddress("glLinkProgram");
+    glGetProgramiv = (void(*)(unsigned, unsigned, int*))
+        SDL_GL_GetProcAddress("glGetProgramiv");
+    glGetProgramInfoLog = (void(*)(unsigned, int, int*, char*))
+        SDL_GL_GetProcAddress("glGetProgramInfoLog");
+    glUseProgram = (void(*)(unsigned))
+        SDL_GL_GetProcAddress("glUseProgram");
 }
