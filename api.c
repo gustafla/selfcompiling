@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stddef.h>
 
 // ------------------------------------ SDL API --------------------------------
 typedef struct SDL_Window W;
@@ -39,7 +40,7 @@ void glDrawArrays(unsigned, int, int); // mode, first, count
 
 void (*glGenBuffers)(unsigned, unsigned*); // size, buffers
 void (*glBindBuffer)(unsigned, unsigned); // target, buffer
-void (*glBufferData)(unsigned, int, const void*, unsigned);
+void (*glBufferData)(unsigned, ptrdiff_t, const void*, unsigned);
 unsigned (*glCreateShader)(unsigned);
 void (*glShaderSource)(unsigned, int, const char**, const int*);
 void (*glCompileShader)(unsigned);
@@ -57,7 +58,7 @@ void gl() {
         SDL_GL_GetProcAddress("glGenBuffers");
     glBindBuffer = (void(*)(unsigned, unsigned))
         SDL_GL_GetProcAddress("glBindBuffer");
-    glBufferData = (void(*)(unsigned, int, const void*, unsigned))
+    glBufferData = (void(*)(unsigned, ptrdiff_t, const void*, unsigned))
         SDL_GL_GetProcAddress("glBufferData");
     glCreateShader = (unsigned(*)(unsigned))
         SDL_GL_GetProcAddress("glCreateShader");
