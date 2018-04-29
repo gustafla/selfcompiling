@@ -9,6 +9,18 @@ typedef union {
     uint8_t p[56];
 } E;
 
+typedef struct {
+    int freq;
+    uint16_t format;
+    uint8_t channels;
+    uint8_t silence;
+    uint16_t samples;
+    uint16_t padding;
+    uint32_t size;
+    void (*callback)(void*, uint8_t*, int);
+    void *userdata;
+} A;
+
 int SDL_Init(uint32_t);
 W *SDL_CreateWindow(const char*, int, int, int, int, uint32_t);
 uint32_t SDL_GetTicks(void);
@@ -17,6 +29,8 @@ void *SDL_GL_CreateContext(W*);
 void SDL_GL_SwapWindow(W*);
 void *SDL_GL_GetProcAddress(const char*);
 int SDL_PollEvent(E*);
+uint32_t SDL_OpenAudioDevice(const char*, int, const A*, const A*, int);
+void SDL_PauseAudioDevice(uint32_t, int);
 
 // ------------------------------------ OpenGL API -----------------------------
 //
