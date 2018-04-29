@@ -4,7 +4,7 @@ CC=gcc
 MINIFY=sh minify.sh
 SHADER_MINIFY=TERM=xterm mono ~/misc/shader_minifier.exe --format none
 LFLAGS=-lSDL2 -lGL -lm
-SOURCES=api.c xmplayer.c main.c
+SOURCES=api.c xmplayer.c unreeeal_superhero_3.xm.c main.c
 SHADERS=$(patsubst %.glsl, %.glsl.min.h.out, $(wildcard shaders/*.glsl))
 
 # Concatenate and compress demo sources into executable

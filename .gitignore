@@ -2,3 +2,5 @@ demo
 *.min
 *.out
 *.out.c
+*.xm
+*.xm.c

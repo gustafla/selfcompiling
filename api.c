@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+// APIENTRY is not needed as this code is not meant for Winblows
+
 // ------------------------------------ SDL API --------------------------------
 typedef struct SDL_Window W;
 
@@ -34,7 +36,6 @@ void SDL_PauseAudioDevice(uint32_t, int);
 
 // ------------------------------------ OpenGL API -----------------------------
 //
-// APIENTRY is not needed as this code is not meant for Winblows
 //
 // typedef int GLsizei;
 // typedef int GLint;
