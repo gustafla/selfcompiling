@@ -6,7 +6,7 @@ void play(void *d, uint8_t *stream, int len) {
 
 void music() {
     xm_context_t *xm;
-    xm_create_context_safe(&xm, unreeeal_superhero_3_xm, unreeeal_superhero_3_xm_len, 48000);
+    xm_create_context_safe(&xm, UNREEEAL_SUPERHERO_3_XM, UNREEEAL_SUPERHERO_3_XM_LEN, 48000);
 
     A want, have;
     want.freq = 48000;
@@ -28,7 +28,7 @@ unsigned compile_shader(unsigned type, const char *src) {
     glGetShaderiv(s, 0x8B81, &success); // GL_COMPILE_STATUS
     if (!success) {
         glGetShaderInfoLog(s, 512, NULL, info);
-        printf("%s\n", info);
+        printf("%s", info);
     }
     return s;
 }
@@ -42,7 +42,7 @@ unsigned link_program(const char *vertex_src, const char *fragment_src) {
     glGetProgramiv(p, 0x8B82, &success);
     if (!success) {
         glGetProgramInfoLog(p, 512, NULL, info);
-        printf("%s\n", info);
+        printf("%s", info);
     }
     return p;
 }

@@ -20,7 +20,7 @@ $(TARGET): shaders.h.out $(CAT_SRC) launcher.sh
 debug: shaders.h.out $(CAT_SRC)
 	cp shaders.h.out $(CAT_SRC).c
 	cat $(CAT_SRC) >> $(CAT_SRC).c
-	$(CC) -g $(LFLAGS) -o $(TARGET) $(CAT_SRC).c
+	$(CC) -O2 -g $(LFLAGS) -o $(TARGET) $(CAT_SRC).c
 
 clean:
 	rm -f $(TARGET)
