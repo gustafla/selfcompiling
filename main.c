@@ -22,7 +22,28 @@ void music() {
 
 unsigned compile_shader(unsigned type, const char *src) {
     unsigned s = glCreateShader(type);
-    glShaderSource(s, 1, &src, NULL);
+
+    // add correct header to shader
+    const char *full_src[2];
+    switch (type) {
+        case 0x8B31:
+            full_src[0] = "#version 330\n"
+                "layout (location = 0) in vec3 a_pos;\n"
+                "layout (location = 1) in vec2 a_texturePos;\n"
+                "out vec3 v_pos;\n"
+                "out vec2 v_texturePos;\n";
+            break;
+        case 0x8B30:
+            full_src[0] = "#version 330\n"
+                "out vec4 fragColor;\n"
+                "in vec2 v_texturePos;\n";
+            break;
+        default:
+            full_src[0] = "#version 330\n";
+    }
+    full_src[1] = src;
+
+    glShaderSource(s, 2, full_src, NULL);
     glCompileShader(s);
     int success; char info[512];
     glGetShaderiv(s, 0x8B81, &success); // GL_COMPILE_STATUS
