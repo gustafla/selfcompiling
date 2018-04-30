@@ -35,6 +35,7 @@ unsigned compile_shader(unsigned type, const char *src) {
             break;
         case 0x8B30:
             full_src[0] = "#version 330\n"
+                "uniform float u_time;\n"
                 "out vec4 fragColor;\n"
                 "in vec2 v_texturePos;\n";
             break;
@@ -80,6 +81,10 @@ unsigned create_buf(unsigned target, size_t size, const void *data) {
 
 void render(unsigned program, unsigned vertex_array) {
     glUseProgram(program);
+
+    unsigned u_time = glGetUniformLocation(program, "u_time");
+    glUniform1f(u_time, SDL_GetTicks()/1000.f);
+
     glBindVertexArray(vertex_array);
     glDrawArrays(0x0004, 0, 6); // GL_TRIANGLES
     glBindVertexArray(0);

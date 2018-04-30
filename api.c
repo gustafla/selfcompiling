@@ -71,6 +71,8 @@ void (*glGenVertexArrays)(int, unsigned*);
 void (*glBindVertexArray)(unsigned);
 void (*glVertexAttribPointer)(unsigned, int, unsigned, unsigned char, int, const void*);
 void (*glEnableVertexAttribArray)(unsigned);
+int (*glGetUniformLocation)(unsigned, const char*);
+void (*glUniform1f)(int, float);
 
 void gl() {
     glGenBuffers = (void(*)(unsigned, unsigned*))
@@ -109,4 +111,8 @@ void gl() {
         SDL_GL_GetProcAddress("glVertexAttribPointer");
     glEnableVertexAttribArray = (void(*)(unsigned))
         SDL_GL_GetProcAddress("glEnableVertexAttribArray");
+    glGetUniformLocation = (int(*)(unsigned, const char*))
+        SDL_GL_GetProcAddress("glGetUniformLocation");
+    glUniform1f = (void(*)(int, float))
+        SDL_GL_GetProcAddress("glUniform1f");
 }
