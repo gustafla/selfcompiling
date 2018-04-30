@@ -64,8 +64,21 @@ unsigned link_program(const char *vertex_src, const char *fragment_src) {
     if (!success) {
         glGetProgramInfoLog(p, 512, NULL, info);
         printf("%s", info);
+        return 0;
     }
     return p;
+}
+
+unsigned create_buf(unsigned target, size_t size, const void *data) {
+    unsigned buf;
+    glGenBuffers(1, &buf);
+    glBindBuffer(target, buf);
+    glBufferData(target, size, data, 0x88E4); // GL_STATIC_DRAW
+    return buf;
+}
+
+void render(unsigned program, unsigned buf, unsigned vertex_array) {
+    
 }
 
 int main() {
@@ -88,6 +101,24 @@ int main() {
     // Compile and link shaders
     unsigned s = link_program(
             SHADERS_TRIVIAL_GLSL_MIN, SHADERS_FRAGMENT_GLSL_MIN);
+    if (!s) {
+        return EXIT_FAILURE;
+    }
+
+    // Generate a VBO
+    float const vertices[] = {
+        -1.f, -1.f, 0.f, 0.f, 0.f,
+        1.f, -1.f, 0.f, 1.f, 0.f,
+        1.f, 1.f, 0.f, 1.f, 1.f,
+        1.f, 1.f, 0.f, 1.f, 1.f,
+        -1.f, 1.f, 0.f, 0.f, 1.f,
+        -1.f, -1.f, 0.f, 0.f, 0.f
+    };
+    //GL_ARRAY_BUFFER
+    unsigned buf = create_buf(0x8892, sizeof(vertices), vertices);
+
+    // Generate a VAO
+
 
     // Start playing music
     music();
