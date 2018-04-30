@@ -1,9 +1,11 @@
-void play(void* d, uint8_t *stream, int len) {
+#include <stdio.h>
+
+void play(void *d, uint8_t *stream, int len) {
     xm_generate_samples((xm_context_t*)d, (float*)stream, (len/4)/2);
 }
 
 void music() {
-    xm_context_t* xm;
+    xm_context_t *xm;
     xm_create_context_safe(&xm, unreeeal_superhero_3_xm, unreeeal_superhero_3_xm_len, 48000);
 
     A want, have;
@@ -16,6 +18,33 @@ void music() {
 
     uint32_t dev = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
     SDL_PauseAudioDevice(dev, 0);
+}
+
+unsigned compile_shader(unsigned type, const char *src) {
+    unsigned s = glCreateShader(type);
+    glShaderSource(s, 1, &src, NULL);
+    glCompileShader(s);
+    int success; char info[512];
+    glGetShaderiv(s, 0x8B81, &success); // GL_COMPILE_STATUS
+    if (!success) {
+        glGetShaderInfoLog(s, 512, NULL, info);
+        printf("%s\n", info);
+    }
+    return s;
+}
+
+unsigned link_program(const char *vertex_src, const char *fragment_src) {
+    unsigned p = glCreateProgram();
+    glAttachShader(p, compile_shader(0x8B31, vertex_src));
+    glAttachShader(p, compile_shader(0x8B30, fragment_src));
+    glLinkProgram(p);
+    int success; char info[512];
+    glGetProgramiv(p, 0x8B82, &success);
+    if (!success) {
+        glGetProgramInfoLog(p, 512, NULL, info);
+        printf("%s\n", info);
+    }
+    return p;
 }
 
 int main() {
@@ -34,6 +63,10 @@ int main() {
 
     // Load OpenGL functions using SDL_GetProcAddress
     gl();
+
+    // Compile and link shaders
+    unsigned s = link_program(
+            SHADERS_TRIVIAL_GLSL_MIN, SHADERS_FRAGMENT_GLSL_MIN);
 
     // Start playing music
     music();
