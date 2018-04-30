@@ -74,11 +74,15 @@ unsigned create_buf(unsigned target, size_t size, const void *data) {
     glGenBuffers(1, &buf);
     glBindBuffer(target, buf);
     glBufferData(target, size, data, 0x88E4); // GL_STATIC_DRAW
+    glBindBuffer(target, 0);
     return buf;
 }
 
-void render(unsigned program, unsigned buf, unsigned vertex_array) {
-    
+void render(unsigned program, unsigned vertex_array) {
+    glUseProgram(program);
+    glBindVertexArray(vertex_array);
+    glDrawArrays(0x0004, 0, 6); // GL_TRIANGLES
+    glBindVertexArray(0);
 }
 
 int main() {
@@ -117,8 +121,16 @@ int main() {
     //GL_ARRAY_BUFFER
     unsigned buf = create_buf(0x8892, sizeof(vertices), vertices);
 
-    // Generate a VAO
-
+    // Generate the VAO for the shader quad
+    unsigned vertex_array;
+    glGenVertexArrays(1, &vertex_array);
+    glBindVertexArray(vertex_array);
+    glBindBuffer(0x8892, buf); // GL_ARRAY_BUFFER
+    size_t sf = sizeof(float);
+    glVertexAttribPointer(0, 3, 0x1406, 0, 5 * sf, (void*)0); // GL_FLOAT
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, 0x1406, 0, 5 * sf, (void*)(3*sf));
+    glEnableVertexAttribArray(1);
 
     // Start playing music
     music();
@@ -126,9 +138,10 @@ int main() {
     // Event struct
     E e;
     while(1) {
-        glClearColor(1.f, 0.f, 0.f, 1.f);
         // GL_COLOR_BUFFER_BIT = 0x4000
-        glClear(0x4000);
+        //glClear(0x4000);
+
+        render(s, vertex_array);
 
         SDL_GL_SwapWindow(w);
 
