@@ -104,8 +104,7 @@ int main() {
     W *w = SDL_CreateWindow("testi", 0, 0, 640, 480, 2);
     SDL_GL_CreateContext(w); // SDL_GL_LoadLibrary, SDL_GL_MakeCurrent
 
-    // Load OpenGL functions using SDL_GetProcAddress
-    gl();
+    // Load OpenGL functions using SDL_GetProcAddress if needed (not needed)
 
     // Compile and link shaders
     unsigned s = link_program(

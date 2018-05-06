@@ -29,13 +29,14 @@ uint32_t SDL_GetTicks(void);
 int SDL_GL_SetAttribute(char, int);
 void *SDL_GL_CreateContext(W*);
 void SDL_GL_SwapWindow(W*);
-void *SDL_GL_GetProcAddress(const char*);
 int SDL_PollEvent(E*);
 uint32_t SDL_OpenAudioDevice(const char*, int, const A*, const A*, int);
 void SDL_PauseAudioDevice(uint32_t, int);
 
 // ------------------------------------ OpenGL API -----------------------------
 //
+// SDL_GL_GetProcAddress is not needed on most sane unixlike systems,
+// especially for this programs as simple as this
 //
 // typedef int GLsizei;
 // typedef int GLint;
@@ -48,71 +49,23 @@ void SDL_PauseAudioDevice(uint32_t, int);
 void glClearColor(float, float, float, float); // rgba
 void glClear(unsigned); // mask
 void glDrawArrays(unsigned, int, int); // mode, first, count
-
-// GetProcAddress function pointers
-// These could be implemented as short functions with custom names which call
-// the function directly from GetProcAddress. Consider it if size becomes scarce
-
-void (*glGenBuffers)(unsigned, unsigned*); // size, buffers
-void (*glBindBuffer)(unsigned, unsigned); // target, buffer
-void (*glBufferData)(unsigned, ptrdiff_t, const void*, unsigned);
-unsigned (*glCreateShader)(unsigned);
-void (*glShaderSource)(unsigned, int, const char**, const int*);
-void (*glCompileShader)(unsigned);
-void (*glGetShaderiv)(unsigned, unsigned, int*);
-void (*glGetShaderInfoLog)(unsigned, int, int*, char*);
-unsigned (*glCreateProgram)(void);
-void (*glAttachShader)(unsigned, unsigned);
-void (*glLinkProgram)(unsigned);
-void (*glGetProgramiv)(unsigned, unsigned, int*);
-void (*glGetProgramInfoLog)(unsigned, int, int*, char*);
-void (*glUseProgram)(unsigned);
-void (*glGenVertexArrays)(int, unsigned*);
-void (*glBindVertexArray)(unsigned);
-void (*glVertexAttribPointer)(unsigned, int, unsigned, unsigned char, int, const void*);
-void (*glEnableVertexAttribArray)(unsigned);
-int (*glGetUniformLocation)(unsigned, const char*);
-void (*glUniform1f)(int, float);
-
-void gl() {
-    glGenBuffers = (void(*)(unsigned, unsigned*))
-        SDL_GL_GetProcAddress("glGenBuffers");
-    glBindBuffer = (void(*)(unsigned, unsigned))
-        SDL_GL_GetProcAddress("glBindBuffer");
-    glBufferData = (void(*)(unsigned, ptrdiff_t, const void*, unsigned))
-        SDL_GL_GetProcAddress("glBufferData");
-    glCreateShader = (unsigned(*)(unsigned))
-        SDL_GL_GetProcAddress("glCreateShader");
-    glShaderSource = (void(*)(unsigned, int, const char**, const int*))
-        SDL_GL_GetProcAddress("glShaderSource");
-    glCompileShader = (void(*)(unsigned))
-        SDL_GL_GetProcAddress("glCompileShader");
-    glGetShaderiv = (void(*)(unsigned, unsigned, int*))
-        SDL_GL_GetProcAddress("glGetShaderiv");
-    glGetShaderInfoLog = (void(*)(unsigned, int, int*, char*))
-        SDL_GL_GetProcAddress("glGetShaderInfoLog");
-    glCreateProgram = (unsigned(*)(void))
-        SDL_GL_GetProcAddress("glCreateProgram");
-    glAttachShader = (void(*)(unsigned, unsigned))
-        SDL_GL_GetProcAddress("glAttachShader");
-    glLinkProgram = (void(*)(unsigned))
-        SDL_GL_GetProcAddress("glLinkProgram");
-    glGetProgramiv = (void(*)(unsigned, unsigned, int*))
-        SDL_GL_GetProcAddress("glGetProgramiv");
-    glGetProgramInfoLog = (void(*)(unsigned, int, int*, char*))
-        SDL_GL_GetProcAddress("glGetProgramInfoLog");
-    glUseProgram = (void(*)(unsigned))
-        SDL_GL_GetProcAddress("glUseProgram");
-    glGenVertexArrays = (void(*)(int, unsigned*))
-        SDL_GL_GetProcAddress("glGenVertexArrays");
-    glBindVertexArray = (void(*)(unsigned))
-        SDL_GL_GetProcAddress("glBindVertexArray");
-    glVertexAttribPointer = (void(*)(unsigned, int, unsigned, unsigned char, int, const void*))
-        SDL_GL_GetProcAddress("glVertexAttribPointer");
-    glEnableVertexAttribArray = (void(*)(unsigned))
-        SDL_GL_GetProcAddress("glEnableVertexAttribArray");
-    glGetUniformLocation = (int(*)(unsigned, const char*))
-        SDL_GL_GetProcAddress("glGetUniformLocation");
-    glUniform1f = (void(*)(int, float))
-        SDL_GL_GetProcAddress("glUniform1f");
-}
+void glGenBuffers(unsigned, unsigned*); // size, buffers
+void glBindBuffer(unsigned, unsigned); // target, buffer
+void glBufferData(unsigned, ptrdiff_t, const void*, unsigned);
+unsigned glCreateShader(unsigned);
+void glShaderSource(unsigned, int, const char**, const int*);
+void glCompileShader(unsigned);
+void glGetShaderiv(unsigned, unsigned, int*);
+void glGetShaderInfoLog(unsigned, int, int*, char*);
+unsigned glCreateProgram(void);
+void glAttachShader(unsigned, unsigned);
+void glLinkProgram(unsigned);
+void glGetProgramiv(unsigned, unsigned, int*);
+void glGetProgramInfoLog(unsigned, int, int*, char*);
+void glUseProgram(unsigned);
+void glGenVertexArrays(int, unsigned*);
+void glBindVertexArray(unsigned);
+void glVertexAttribPointer(unsigned, int, unsigned, unsigned char, int, const void*);
+void glEnableVertexAttribArray(unsigned);
+int glGetUniformLocation(unsigned, const char*);
+void glUniform1f(int, float);
