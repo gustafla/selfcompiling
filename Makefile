@@ -1,7 +1,7 @@
 TARGET=demo
 CAT_SRC=$(TARGET).out
 CC=gcc
-MINIFY=sh minify.sh
+MINIFY=sh trim.sh
 SHADER_MINIFY=TERM=xterm mono ~/misc/shader_minifier.exe --format none
 LFLAGS=-lSDL2 -lGL -lm
 SOURCES=api.c xmplayer.c unreeeal_superhero_3.xm.c main.c
