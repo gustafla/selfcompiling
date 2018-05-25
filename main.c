@@ -83,7 +83,7 @@ void render(unsigned program, unsigned vertex_array) {
     glUseProgram(program);
 
     unsigned u_time = glGetUniformLocation(program, "u_time");
-    glUniform1f(u_time, SDL_GetTicks()/1000.f);
+    glUniform1f(u_time, SDL_GetTicks()/1000.);
 
     glBindVertexArray(vertex_array);
     glDrawArrays(0x0004, 0, 6); // GL_TRIANGLES
@@ -115,12 +115,12 @@ int main() {
 
     // Generate a VBO
     float const vertices[] = {
-        -1.f, -1.f, 0.f, 0.f, 0.f,
-        1.f, -1.f, 0.f, 1.f, 0.f,
-        1.f, 1.f, 0.f, 1.f, 1.f,
-        1.f, 1.f, 0.f, 1.f, 1.f,
-        -1.f, 1.f, 0.f, 0.f, 1.f,
-        -1.f, -1.f, 0.f, 0.f, 0.f
+        -1., -1., 0., 0., 0.,
+        1., -1., 0., 1., 0.,
+        1., 1., 0., 1., 1.,
+        1., 1., 0., 1., 1.,
+        -1., 1., 0., 0., 1.,
+        -1., -1., 0., 0., 0.
     };
     //GL_ARRAY_BUFFER
     unsigned buf = create_buf(0x8892, sizeof(vertices), vertices);
