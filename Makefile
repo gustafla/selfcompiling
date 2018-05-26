@@ -6,8 +6,8 @@ SHADER_MINIFY=TERM=xterm mono ~/misc/shader_minifier.exe --format none
 LFLAGS=-lSDL2 -lGL -lm
 
 HEADERS=api.c
-SOURCES=unreeeal_superhero_3.xm.c xmplayer.c
-SOURCES_TO_MINIFY=main.c
+SOURCES=unreeeal_superhero_3.xm.c
+SOURCES_TO_MINIFY=xmplayer.c main.c
 
 SHADERS=$(patsubst %.glsl, %.glsl.min.h.out, $(wildcard shaders/*.glsl))
 
@@ -37,7 +37,9 @@ $(CAT_SRC): shaders.h.out $(HEADERS) $(SOURCES) $(SOURCES_TO_MINIFY)
 	echo > $(CAT_SRC)
 	for f in $(HEADERS); do cat $$f >> $(CAT_SRC); done
 	for f in $(SOURCES); do cat $$f >> $(CAT_SRC); done
-	for f in $(SOURCES_TO_MINIFY); do minify -h $(HEADERS) -h shaders.h.out $$f >> $(CAT_SRC); done
+	echo > out.min
+	for f in $(SOURCES_TO_MINIFY); do cat $$f >> out.min; done
+	minify -h $(HEADERS) -h shaders.h.out out.min >> $(CAT_SRC)
 
 # Concatenate minified shaders into one .h file
 shaders.h.out: $(SHADERS)
