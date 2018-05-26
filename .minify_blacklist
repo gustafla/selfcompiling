@@ -7,20 +7,20 @@ NUM_NOTES
 NUM_ENVELOPE_POINTS
 MAX_NUM_ROWS
 XM_SAMPLE_RAMPING_POINTS
+
 READ_U8
 READ_U16
 READ_U32
 READ_MEMCPY
-XM_LINEAR_INTERPOLATION
 xm_context_t
 xm_create_context_safe
 xm_generate_samples
 
-moddata_length
-moddata
-offset
 memcpy_pad
+moddata
+moddata_length
 ptr
+offset
 length
 
 XM_CLAMP_UP1F

@@ -26,7 +26,6 @@ void memcpy_pad(void* dst, size_t dst_len, const void* src, size_t src_len, size
 #define NUM_NOTES 96
 #define NUM_ENVELOPE_POINTS 12
 #define MAX_NUM_ROWS 256
-
 #define XM_SAMPLE_RAMPING_POINTS 0x20
 
 #define READ_U8(offset) (((offset) < moddata_length) ? (*(uint8_t*)(moddata + (offset))) : 0)
@@ -34,7 +33,7 @@ void memcpy_pad(void* dst, size_t dst_len, const void* src, size_t src_len, size
 #define READ_U32(offset) ((uint32_t)READ_U16(offset) | ((uint32_t)READ_U16((offset) + 2) << 16))
 #define READ_MEMCPY(ptr, offset, length) memcpy_pad(ptr, length, moddata, moddata_length, offset)
 
-#define XM_LINEAR_INTERPOLATION (1)
+int XM_LINEAR_INTERPOLATION=1;
 
 // ----- Data types -----
 
