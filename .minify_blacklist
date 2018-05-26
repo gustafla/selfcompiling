@@ -22,7 +22,6 @@ offset
 memcpy_pad
 ptr
 length
-f
 
 XM_CLAMP_UP1F
 XM_CLAMP_UP

@@ -558,8 +558,8 @@ int xm_create_context_safe(xm_context_t** ctxp, const char* moddata, size_t modd
     ctx->global_volume = 1.f;
     ctx->amplification = .25f;
 
-    ctx->volume_ramp = (1.f / 128.f);
-    ctx->panning_ramp = (1.f / 128.f);
+    ctx->volume_ramp = (1/ 128.f);
+    ctx->panning_ramp = (1/ 128.f);
 
     for(uint8_t i = 0; i < ctx->module.num_channels; ++i) {
         xm_channel_context_t* ch = ctx->channels + i;
@@ -665,13 +665,13 @@ float xm_waveform(xm_waveform_type_t waveform, uint8_t step) {
     switch(waveform) {
 
         case XM_SINE_WAVEFORM:
-            return -sinf(2.f * 3.141592f * (float)step / (float)0x40);
+            return -sinf(2* 3.141592f * (float)step / (float)0x40);
 
         case XM_RAMP_DOWN_WAVEFORM:
             return (float)(0x20 - step) / 0x20;
 
         case XM_SQUARE_WAVEFORM:
-            return (step >= 0x20) ? 1.f : -1.f;
+            return (step >= 0x20) ? 1: -1.f;
 
         case XM_RANDOM_WAVEFORM:
             next_rand = next_rand * 1103515245 + 12345;
@@ -714,7 +714,7 @@ void xm_vibrato(xm_context_t* ctx, xm_channel_context_t* ch, uint8_t param, uint
 
 void xm_tremolo(xm_context_t* ctx, xm_channel_context_t* ch, uint8_t param, uint16_t pos) {
     unsigned int step = pos * (param >> 4);
-    ch->tremolo_volume = -1.f * xm_waveform(ch->tremolo_waveform, step)
+    ch->tremolo_volume = -1* xm_waveform(ch->tremolo_waveform, step)
         * (float)(param & 0x0F) / (float)0xF;
 }
 
@@ -744,7 +744,7 @@ void xm_tone_portamento(xm_context_t* ctx, xm_channel_context_t* ch) {
         XM_SLIDE_TOWARDS(ch->period,
                 ch->tone_portamento_target_period,
                 (ctx->module.frequency_type == XM_LINEAR_FREQUENCIES ?
-                 4.f : 1.f) * ch->tone_portamento_param
+                 4: 1.f) * ch->tone_portamento_param
                 );
         xm_update_frequency(ctx, ch);
     }
@@ -813,17 +813,17 @@ void xm_post_pattern_change(xm_context_t* ctx) {
 }
 
 float xm_linear_period(float note) {
-    return 7680.f - note * 64.f;
+    return 7680- note * 64.f;
 }
 
 float xm_linear_frequency(float period) {
-    return 8363.f * powf(2.f, (4608.f - period) / 768.f);
+    return 8363* powf(2.f, (4608- period) / 768.f);
 }
 
 float xm_amiga_period(float note) {
     unsigned int intnote = note;
     uint8_t a = intnote % 12;
-    int8_t octave = note / 12.f - 2;
+    int8_t octave = note / 12- 2;
     uint16_t p1 = amiga_frequencies[a], p2 = amiga_frequencies[a + 1];
 
     if(octave > 0) {
@@ -861,7 +861,7 @@ float xm_frequency(xm_context_t* ctx, float period, float note_offset) {
     switch(ctx->module.frequency_type) {
 
         case XM_LINEAR_FREQUENCIES:
-            return xm_linear_frequency(period - 64.f * note_offset);
+            return xm_linear_frequency(period - 64* note_offset);
 
         case XM_AMIGA_FREQUENCIES:
             if(note_offset == 0) {
@@ -895,7 +895,7 @@ float xm_frequency(xm_context_t* ctx, float period, float note_offset) {
                 }
             }
 
-            note = 12.f * (octave + 2) + a + XM_INVERSE_LERP(p1, p2, period);
+            note = 12* (octave + 2) + a + XM_INVERSE_LERP(p1, p2, period);
 
             return xm_amiga_frequency(xm_amiga_period(note + note_offset));
 
@@ -930,7 +930,7 @@ void xm_handle_note_and_instrument(xm_context_t* ctx, xm_channel_context_t* ch,
         xm_instrument_t* instr = ch->instrument;
 
         if(HAS_TONE_PORTAMENTO(ch->current) && instr != NULL && ch->sample != NULL) {
-            ch->note = s->note + ch->sample->relative_note + ch->sample->finetune / 128.f - 1.f;
+            ch->note = s->note + ch->sample->relative_note + ch->sample->finetune / 128- 1.f;
             ch->tone_portamento_target_period = xm_period(ctx, ch->note);
         } else if(instr == NULL || ch->instrument->num_samples == 0) {
             xm_cut_note(ch);
@@ -942,7 +942,7 @@ void xm_handle_note_and_instrument(xm_context_t* ctx, xm_channel_context_t* ch,
                 ch->frame_count = 0;
                 ch->sample = instr->samples + instr->sample_of_notes[s->note - 1];
                 ch->orig_note = ch->note = s->note + ch->sample->relative_note
-                    + ch->sample->finetune / 128.f - 1.f;
+                    + ch->sample->finetune / 128- 1.f;
                 if(s->instrument > 0) {
                     xm_trigger_note(ctx, ch, 0);
                 } else {
@@ -1110,7 +1110,7 @@ void xm_handle_note_and_instrument(xm_context_t* ctx, xm_channel_context_t* ch,
                 case 5:
                     if(NOTE_IS_VALID(ch->current->note) && ch->sample != NULL) {
                         ch->note = ch->current->note + ch->sample->relative_note +
-                            (float)(((s->effect_param & 0x0F) - 8) << 4) / 128.f - 1.f;
+                            (float)(((s->effect_param & 0x0F) - 8) << 4) / 128- 1.f;
                         ch->period = xm_period(ctx, ch->note);
                         xm_update_frequency(ctx, ch);
                     }
@@ -1797,7 +1797,7 @@ void xm_sample(xm_context_t* ctx, float* left, float* right) {
         const float fval = xm_next_of_sample(ch);
 
         if(!ch->muted && !ch->instrument->muted) {
-            *left += fval * ch->actual_volume * (1.f - ch->actual_panning);
+            *left += fval * ch->actual_volume * (1- ch->actual_panning);
             *right += fval * ch->actual_volume * ch->actual_panning;
         }
 
