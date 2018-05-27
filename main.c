@@ -40,6 +40,7 @@ unsigned compile_shader(unsigned type, const char *src) {
     switch (type) {
         case 0x8B31: // vertex shader
             full_src[0] = "#version 330\n"
+                "precision mediump float;\n"
                 "layout (location = 0) in vec3 a_pos;\n"
                 "layout (location = 1) in vec2 a_texturePos;\n"
                 "out vec3 v_pos;\n"
@@ -47,6 +48,7 @@ unsigned compile_shader(unsigned type, const char *src) {
             break;
         case 0x8B30: // fragment shader
             full_src[0] = "#version 330\n"
+                "precision mediump float;\n"
                 "uniform float u_time;\n"
                 "out vec4 fragColor;\n"
                 "in vec2 v_texturePos;\n";
