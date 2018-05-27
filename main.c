@@ -1,5 +1,17 @@
 #include <stdio.h>
 
+const uint16_t SDL_AUDIO_F32 = 0x8120;
+const uint32_t SDL_QUIT = 0x100, SDL_KEYDOWN = 0x300;
+const uint32_t SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10;
+const uint32_t SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2;
+const unsigned GL_COLOR_BUFFER_BIT = 0x4000;
+const unsigned GL_FLOAT = 0x1406;
+const unsigned GL_ARRAY_BUFFER = 0x8892;
+const unsigned GL_TRIANGLES = 0x0004;
+const unsigned GL_STATIC_DRAW = 0x88E4;
+const unsigned GL_VERTEX_SHADER = 0x8B31, GL_FRAGMENT_SHADER = 0x8B30;
+const unsigned GL_COMPILE_STATUS = 0x8B81, GL_LINK_STATUS = 0x8B82;
+
 void play(void *d, uint8_t *stream, int len) {
     xm_generate_samples((xm_context_t*)d, (float*)stream, (len/4)/2);
 }
@@ -10,7 +22,7 @@ void music() {
 
     A want, have;
     want.freq = 48000;
-    want.format = 0x8120; // SDL_AUDIO_F32
+    want.format = SDL_AUDIO_F32;
     want.channels = 2;
     want.samples = 2048;
     want.callback = play;
@@ -26,14 +38,14 @@ unsigned compile_shader(unsigned type, const char *src) {
     // add correct header to shader
     const char *full_src[2];
     switch (type) {
-        case 0x8B31:
+        case 0x8B31: // vertex shader
             full_src[0] = "#version 330\n"
                 "layout (location = 0) in vec3 a_pos;\n"
                 "layout (location = 1) in vec2 a_texturePos;\n"
                 "out vec3 v_pos;\n"
                 "out vec2 v_texturePos;\n";
             break;
-        case 0x8B30:
+        case 0x8B30: // fragment shader
             full_src[0] = "#version 330\n"
                 "uniform float u_time;\n"
                 "out vec4 fragColor;\n"
@@ -47,7 +59,7 @@ unsigned compile_shader(unsigned type, const char *src) {
     glShaderSource(s, 2, full_src, NULL);
     glCompileShader(s);
     int success; char info[512];
-    glGetShaderiv(s, 0x8B81, &success); // GL_COMPILE_STATUS
+    glGetShaderiv(s, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(s, 512, NULL, info);
         printf("%s", info);
@@ -57,11 +69,11 @@ unsigned compile_shader(unsigned type, const char *src) {
 
 unsigned link_program(const char *vertex_src, const char *fragment_src) {
     unsigned p = glCreateProgram();
-    glAttachShader(p, compile_shader(0x8B31, vertex_src));
-    glAttachShader(p, compile_shader(0x8B30, fragment_src));
+    glAttachShader(p, compile_shader(GL_VERTEX_SHADER, vertex_src));
+    glAttachShader(p, compile_shader(GL_FRAGMENT_SHADER, fragment_src));
     glLinkProgram(p);
     int success; char info[512];
-    glGetProgramiv(p, 0x8B82, &success);
+    glGetProgramiv(p, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(p, 512, NULL, info);
         printf("%s", info);
@@ -74,7 +86,7 @@ unsigned create_buf(unsigned target, size_t size, const void *data) {
     unsigned buf;
     glGenBuffers(1, &buf);
     glBindBuffer(target, buf);
-    glBufferData(target, size, data, 0x88E4); // GL_STATIC_DRAW
+    glBufferData(target, size, data, GL_STATIC_DRAW);
     glBindBuffer(target, 0);
     return buf;
 }
@@ -86,13 +98,12 @@ void render(unsigned program, unsigned vertex_array) {
     glUniform1f(u_time, SDL_GetTicks()/1000.);
 
     glBindVertexArray(vertex_array);
-    glDrawArrays(0x0004, 0, 6); // GL_TRIANGLES
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 }
 
 int main() {
-    // SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10
-    SDL_Init(0x30);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
     // MAJOR_VERSION = 17, MINOR_VERSION = 18, PROFILE_MASK = 21
     SDL_GL_SetAttribute(17, 3);
@@ -100,9 +111,8 @@ int main() {
     // SDL_GL_CONTEXT_PROFILE_CORE == 0x1
     SDL_GL_SetAttribute(21, 1);
 
-    // SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2
-    W *w = SDL_CreateWindow("testi", 0, 0, 640, 480, 2);
-    SDL_GL_CreateContext(w); // SDL_GL_LoadLibrary, SDL_GL_MakeCurrent
+    W *w = SDL_CreateWindow("testi", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_GL_CreateContext(w); // SDL_GL_LoadLibrary, SDL_GL_MakeCurrent?
 
     // Load OpenGL functions using SDL_GetProcAddress if needed (not needed)
 
@@ -122,18 +132,18 @@ int main() {
         -1., 1., 0., 0., 1.,
         -1., -1., 0., 0., 0.
     };
-    //GL_ARRAY_BUFFER
-    unsigned buf = create_buf(0x8892, sizeof(vertices), vertices);
+
+    unsigned buf = create_buf(GL_ARRAY_BUFFER, sizeof(vertices), vertices);
 
     // Generate the VAO for the shader quad
     unsigned vertex_array;
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
-    glBindBuffer(0x8892, buf); // GL_ARRAY_BUFFER
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
     size_t sf = sizeof(float);
-    glVertexAttribPointer(0, 3, 0x1406, 0, 5 * sf, (void*)0); // GL_FLOAT
+    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 5 * sf, (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, 0x1406, 0, 5 * sf, (void*)(3*sf));
+    glVertexAttribPointer(1, 2, GL_FLOAT, 0, 5 * sf, (void*)(3*sf));
     glEnableVertexAttribArray(1);
 
     // Start playing music
@@ -142,16 +152,14 @@ int main() {
     // Event struct
     E e;
     while(1) {
-        // GL_COLOR_BUFFER_BIT = 0x4000
-        //glClear(0x4000);
+        //glClear(GL_COLOR_BUFFER_BIT);
 
         render(s, vertex_array);
 
         SDL_GL_SwapWindow(w);
 
         SDL_PollEvent(&e);
-        // SDL_QUIT = 0x100, SDL_KEYDOWN = 0x300
-        if (e.type == 0x100 || e.type == 0x300) break;
+        if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN) break;
     }
 
     return 0;
