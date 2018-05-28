@@ -6,18 +6,6 @@
 #include "shaders.h.out"
 #include "unreeeal_superhero_3.xm.c"
 #include "xmplayer.c"
-#else
-const uint16_t AUDIO_F32 = 0x8120;
-const uint32_t SDL_QUIT = 0x100, SDL_KEYDOWN = 0x300;
-const uint32_t SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10;
-const uint32_t SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2;
-const unsigned GL_COLOR_BUFFER_BIT = 0x4000;
-const unsigned GL_FLOAT = 0x1406;
-const unsigned GL_ARRAY_BUFFER = 0x8892;
-const unsigned GL_TRIANGLES = 0x0004;
-const unsigned GL_STATIC_DRAW = 0x88E4;
-const unsigned GL_VERTEX_SHADER = 0x8B31, GL_FRAGMENT_SHADER = 0x8B30;
-const unsigned GL_COMPILE_STATUS = 0x8B81, GL_LINK_STATUS = 0x8B82;
 #endif
 
 void play(void *d, uint8_t *stream, int len) {
