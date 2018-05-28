@@ -1,15 +1,13 @@
 #include <stdio.h>
 
 #ifdef DEBUG
-#include <SDL_platform.h>
+#include <GL/glew.h>
 #include <SDL2/SDL.h>
-#include <GL/gl.h>
-#include <GL/glext.h>
 #include "shaders.h.out"
 #include "unreeeal_superhero_3.xm.c"
 #include "xmplayer.c"
 #else
-const uint16_t SDL_AUDIO_F32 = 0x8120;
+const uint16_t AUDIO_F32 = 0x8120;
 const uint32_t SDL_QUIT = 0x100, SDL_KEYDOWN = 0x300;
 const uint32_t SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10;
 const uint32_t SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2;
@@ -23,7 +21,7 @@ const unsigned GL_COMPILE_STATUS = 0x8B81, GL_LINK_STATUS = 0x8B82;
 #endif
 
 void play(void *d, uint8_t *stream, int len) {
-    xm_generate_samples((xm_context_t*)d, (float*)stream, (len/4)/2);
+    xm_generate_samples((xm_context_t*)d, (float*)stream, (len/8));
 }
 
 void music() {
@@ -32,7 +30,7 @@ void music() {
 
     SDL_AudioSpec want, have;
     want.freq = 48000;
-    want.format = SDL_AUDIO_F32;
+    want.format = AUDIO_F32;
     want.channels = 2;
     want.samples = 2048;
     want.callback = play;
@@ -126,7 +124,10 @@ int main() {
     SDL_Window *w = SDL_CreateWindow("testi", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GL_CreateContext(w); // SDL_GL_LoadLibrary, SDL_GL_MakeCurrent?
 
-    // Load OpenGL functions using SDL_GetProcAddress if needed (not needed)
+    // Load OpenGL functions using SDL_GetProcAddress if needed
+#ifdef DEBUG
+    glewInit();
+#endif
 
     // Compile and link shaders
     unsigned s = link_program(
@@ -171,9 +172,10 @@ int main() {
 
         SDL_PollEvent(&e);
 #ifdef DEBUG
-        if (e.type == SDL_QUIT) break;
-        if (e.type == SDL_KEYDOWN) {
-            if (e.key.keysym.sym == SDLK_ESCAPE) {
+        if (e.type == SDL_QUIT) {
+            break;
+        } else if (e.type == SDL_KEYDOWN) {
+            if (e.key.keysym.sym == SDLK_ESCAPE || e.key.keysym.sym == SDLK_q) {
                 break;
             }
         }

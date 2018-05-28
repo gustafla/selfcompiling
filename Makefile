@@ -3,7 +3,7 @@ CAT_SRC=$(TARGET).out
 CC=gcc
 MINIFY=sh trim.sh
 SHADER_MINIFY=TERM=xterm mono ~/misc/shader_minifier.exe --format none
-LFLAGS=$(shell sdl2-config --libs) -lGL -lm
+LFLAGS=$(shell sdl2-config --libs) -lGL -lGLEW -lm
 
 HEADERS=api.c
 SOURCES=unreeeal_superhero_3.xm.c
