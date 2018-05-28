@@ -3,7 +3,7 @@ CAT_SRC=$(TARGET).out
 CC=gcc
 MINIFY=sh trim.sh
 SHADER_MINIFY=TERM=xterm mono ~/misc/shader_minifier.exe --format none
-LFLAGS=-lSDL2 -lGL -lm
+LFLAGS=$(shell sdl2-config --libs) -lGL -lm
 
 HEADERS=api.c
 SOURCES=unreeeal_superhero_3.xm.c
@@ -16,15 +16,14 @@ $(TARGET): shaders.h.out $(CAT_SRC) launcher.sh
 	cp shaders.h.out $(CAT_SRC).c
 	$(MINIFY) $(CAT_SRC) >> $(CAT_SRC).c
 	cp launcher.sh $(TARGET)
-	cat $(CAT_SRC).c | lzma -9e -T0 - >> $(TARGET)
+	unifdef -x 2 -UDEBUG $(CAT_SRC).c | lzma -9e -T0 - >> $(TARGET)
 	chmod +x $(TARGET)
 
 .PHONY: debug clean
 
-debug: shaders.h.out $(CAT_SRC)
-	cp shaders.h.out $(CAT_SRC).c
-	cat $(CAT_SRC) >> $(CAT_SRC).c
-	$(CC) -O2 -g $(LFLAGS) -o $(TARGET) $(CAT_SRC).c
+debug: shaders.h.out main.c
+	unifdef -x 2 -DDEBUG -o $(CAT_SRC).c main.c
+	$(CC) $(shell sdl2-config --cflags) -O2 -g $(LFLAGS) -o $(TARGET) $(CAT_SRC).c
 
 clean:
 	rm -f $(TARGET)

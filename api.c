@@ -4,12 +4,12 @@
 // APIENTRY is not needed as this code is not meant for Winblows
 
 // ------------------------------------ SDL API --------------------------------
-typedef struct SDL_Window W;
+typedef struct SDL_Window SDL_Window;
 
 typedef union {
     uint32_t type;
     uint8_t p[56];
-} E;
+} SDL_Event;
 
 typedef struct {
     int freq;
@@ -21,16 +21,17 @@ typedef struct {
     uint32_t size;
     void (*callback)(void*, uint8_t*, int);
     void *userdata;
-} A;
+} SDL_AudioSpec;
 
 int SDL_Init(uint32_t);
-W *SDL_CreateWindow(const char*, int, int, int, int, uint32_t);
+SDL_Window *SDL_CreateWindow(const char*, int, int, int, int, uint32_t);
 uint32_t SDL_GetTicks(void);
 int SDL_GL_SetAttribute(char, int);
-void *SDL_GL_CreateContext(W*);
-void SDL_GL_SwapWindow(W*);
-int SDL_PollEvent(E*);
-uint32_t SDL_OpenAudioDevice(const char*, int, const A*, const A*, int);
+void *SDL_GL_CreateContext(SDL_Window*);
+void SDL_GL_SwapWindow(SDL_Window*);
+int SDL_PollEvent(SDL_Event*);
+uint32_t SDL_OpenAudioDevice(const char*, int,
+        const SDL_AudioSpec*, const SDL_AudioSpec*, int);
 void SDL_PauseAudioDevice(uint32_t, int);
 
 // ------------------------------------ OpenGL API -----------------------------
