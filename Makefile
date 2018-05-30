@@ -3,6 +3,9 @@ CAT_SRC=$(TARGET).out
 CC=gcc
 LFLAGS=$(shell sdl2-config --libs) -lGL -lGLEW -lm
 
+SHADERS_TO_C=sh shaders_to_c.sh
+debug:SHADERS_TO_C=sh shaders_to_c.sh debug
+
 HEADERS=api.c
 SOURCES=unreeeal_superhero_3.xm.c
 SOURCES_TO_MINIFY=xmplayer.c main.c
@@ -35,4 +38,4 @@ $(CAT_SRC): shaders.h.out $(HEADERS) $(SOURCES) $(SOURCES_TO_MINIFY)
 	minify $(patsubst %, -h %, $(HEADERS)) -h shaders.h.out out.min >> $(CAT_SRC)
 
 shaders.h.out:
-	cd shaders; ./shaders_to_c.sh
+	cd shaders; $(SHADERS_TO_C)

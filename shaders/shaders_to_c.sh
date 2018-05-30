@@ -14,7 +14,7 @@ for f in *.min; do
     F=`echo $f_clean | tr ./ _ | tr '[:lower:]' '[:upper:]'`
     echo "char *$F=\"\\" > "$f.h.out"
     if [ "$1" = "debug" ]; then
-        echo "shaders/$f_clean" >> "$f.h.out"
+        echo "shaders/$f_clean\\" >> "$f.h.out"
     else
         cat $f | sed 's/$/\\/' >> "$f.h.out"
         echo >> "$f.h.out"
