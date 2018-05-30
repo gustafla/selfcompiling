@@ -3,10 +3,13 @@
 #ifdef DEBUG
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
+#include "read_file.c"
 #include "shaders.h.out"
 #include "unreeeal_superhero_3.xm.c"
 #include "xmplayer.c"
 #endif
+
+char **SCENES[] = {&PALLOSCENE_FRAG};
 
 void play(void *d, uint8_t *stream, int len) {
     xm_generate_samples((xm_context_t*)d, (float*)stream, (len/8));
@@ -28,11 +31,11 @@ void music() {
     SDL_PauseAudioDevice(dev, 0);
 }
 
-unsigned compile_shader(unsigned type, const char *src) {
+unsigned compile_shader(unsigned type, char *src) {
     unsigned s = glCreateShader(type);
 
     // add correct header to shader
-    const char *full_src[2];
+    char *full_src[2];
     switch (type) {
         case 0x8B31: // vertex shader
             full_src[0] = "#version 330\n"
@@ -52,9 +55,13 @@ unsigned compile_shader(unsigned type, const char *src) {
         default:
             full_src[0] = "#version 330\n";
     }
+#ifdef DEBUG
+    read_file_to_str(&full_src[1], src);
+#else
     full_src[1] = src;
+#endif
 
-    glShaderSource(s, 2, full_src, NULL);
+    glShaderSource(s, 2, (const char**)full_src, NULL);
     glCompileShader(s);
     int success; char info[512];
     glGetShaderiv(s, GL_COMPILE_STATUS, &success);
@@ -65,7 +72,8 @@ unsigned compile_shader(unsigned type, const char *src) {
     return s;
 }
 
-unsigned link_program(const char *vertex_src, const char *fragment_src) {
+// Params are filenames in debug builds, but shader source code otherwise
+unsigned link_program(char *vertex_src, char *fragment_src) {
     unsigned p = glCreateProgram();
     glAttachShader(p, compile_shader(GL_VERTEX_SHADER, vertex_src));
     glAttachShader(p, compile_shader(GL_FRAGMENT_SHADER, fragment_src));
@@ -118,8 +126,8 @@ int main() {
 #endif
 
     // Compile and link shaders
-    unsigned s = link_program(
-            TRIVIAL_VERT, PALLOSCENE_FRAG);
+    unsigned scene = 0;
+    unsigned s = link_program(TRIVIAL_VERT, *SCENES[scene]);
     if (!s) {
         return EXIT_FAILURE;
     }
@@ -165,6 +173,10 @@ int main() {
         } else if (e.type == SDL_KEYDOWN) {
             if (e.key.keysym.sym == SDLK_ESCAPE || e.key.keysym.sym == SDLK_q) {
                 break;
+            } else if (e.key.keysym.sym == SDLK_r) {
+                if (!(s = link_program(TRIVIAL_VERT, *SCENES[scene]))) {
+                    break;
+                }
             }
         }
 #else
