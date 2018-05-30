@@ -1,18 +1,24 @@
 #!/bin/sh
 
 TERM=xterm
+SOURCEFILES=`find * -name '*.frag' -o -name '*.vert'`
 
 # Minify with Crtl-Alt-Test's tool
-for f in `find * -name '*.frag' -o -name '*.vert'`; do
+for f in $SOURCEFILES; do
     mono ~/misc/shader_minifier.exe --format none -o "$f.min" "$f"
 done
 
 # Convert to C source
 for f in *.min; do
-    F=`echo $f | tr ./ _ | tr '[:lower:]' '[:upper:]'`
+    f_clean=`basename $f .min`
+    F=`echo $f_clean | tr ./ _ | tr '[:lower:]' '[:upper:]'`
     echo "char *$F=\"\\" > "$f.h.out"
-    cat $f | sed 's/$/\\/' >> "$f.h.out"
-    echo >> "$f.h.out"
+    if [ "$1" = "debug" ]; then
+        echo "shaders/$f_clean" >> "$f.h.out"
+    else
+        cat $f | sed 's/$/\\/' >> "$f.h.out"
+        echo >> "$f.h.out"
+    fi
     echo "\";" >> "$f.h.out"
 done
 
