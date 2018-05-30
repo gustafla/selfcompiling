@@ -9,7 +9,7 @@
 #include "xmplayer.c"
 #endif
 
-char **SCENES[] = {&PALLOSCENE_FRAG};
+char **SCENES[] = {&PALLOSCENE_FRAG, &TESTI_FRAG};
 
 void play(void *d, uint8_t *stream, int len) {
     xm_generate_samples((xm_context_t*)d, (float*)stream, (len/8));
@@ -174,6 +174,11 @@ int main() {
             if (e.key.keysym.sym == SDLK_ESCAPE || e.key.keysym.sym == SDLK_q) {
                 break;
             } else if (e.key.keysym.sym == SDLK_r) {
+                if (!(s = link_program(TRIVIAL_VERT, *SCENES[scene]))) {
+                    break;
+                }
+            } else if (e.key.keysym.sym == SDLK_n) {
+                scene = (scene + 1) % (sizeof(SCENES)/sizeof(char**));
                 if (!(s = link_program(TRIVIAL_VERT, *SCENES[scene]))) {
                     break;
                 }
