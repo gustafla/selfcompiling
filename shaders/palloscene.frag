@@ -76,3 +76,4 @@ void main() {
     vec3 p = march(vec3(0.), ray);
     fragColor = vec4(shade(p), 1.);
 }
+

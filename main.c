@@ -119,7 +119,7 @@ int main() {
 
     // Compile and link shaders
     unsigned s = link_program(
-            SHADERS_TRIVIAL_GLSL_MIN, SHADERS_FRAGMENT_GLSL_MIN);
+            TRIVIAL_VERT_MIN, PALLOSCENE_FRAG_MIN);
     if (!s) {
         return EXIT_FAILURE;
     }
