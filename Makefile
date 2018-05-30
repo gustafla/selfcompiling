@@ -32,7 +32,7 @@ $(CAT_SRC): shaders.h.out $(HEADERS) $(SOURCES) $(SOURCES_TO_MINIFY)
 	for f in $(SOURCES); do cat $$f >> $(CAT_SRC); done
 	echo > out.min
 	for f in $(SOURCES_TO_MINIFY); do cat $$f >> out.min; done
-	minify -h $(HEADERS) -h shaders.h.out out.min >> $(CAT_SRC)
+	minify $(patsubst %, -h %, $(HEADERS)) -h shaders.h.out out.min >> $(CAT_SRC)
 
 shaders.h.out:
 	cd shaders; ./shaders_to_c.sh
