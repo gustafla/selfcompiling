@@ -6,6 +6,8 @@ LFLAGS=$(shell sdl2-config --libs) -lGL -lGLEW -lm
 SHADERS_TO_C=sh shaders_to_c.sh
 debug:SHADERS_TO_C=sh shaders_to_c.sh debug
 
+# shaders.h.out has to be excluded because trim can't deal with it
+# music.xm.c has to be excluded because minify can't deal with it
 HEADERS=api.c
 SOURCES=xmplayer.c main.c
 
