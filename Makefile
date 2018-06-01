@@ -7,8 +7,7 @@ SHADERS_TO_C=sh shaders_to_c.sh
 debug:SHADERS_TO_C=sh shaders_to_c.sh debug
 
 HEADERS=api.c
-SOURCES=unreeeal_superhero_3.xm.c
-SOURCES_TO_MINIFY=xmplayer.c main.c
+SOURCES=xmplayer.c main.c
 
 # Concatenate and compress demo sources into executable
 $(TARGET): shaders.h.out $(CAT_SRC) launcher.sh
@@ -29,13 +28,13 @@ clean:
 	find . -name "*.out" -delete
 	find . -name "*.out.c" -delete
 
-$(CAT_SRC): shaders.h.out $(HEADERS) $(SOURCES) $(SOURCES_TO_MINIFY)
+$(CAT_SRC): $(HEADERS) music.xm.c $(SOURCES)
 	echo > $(CAT_SRC)
 	for f in $(HEADERS); do cat $$f >> $(CAT_SRC); done
-	for f in $(SOURCES); do cat $$f >> $(CAT_SRC); done
+	cat music.xm.c >> $(CAT_SRC)
 	echo > out.min
-	for f in $(SOURCES_TO_MINIFY); do cat $$f >> out.min; done
-	minify $(patsubst %, -h %, $(HEADERS)) -h shaders.h.out out.min >> $(CAT_SRC)
+	for f in $(SOURCES); do cat $$f >> out.min; done
+	minify $(patsubst %,-h %,$(HEADERS)) -h shaders.h.out out.min >> $(CAT_SRC)
 
 shaders.h.out:
 	cd shaders; $(SHADERS_TO_C)

@@ -17,9 +17,9 @@ for f in $SOURCEFILES; do
     F=`echo $f | tr ./ _ | tr '[:lower:]' '[:upper:]'`
 
     # Write C source code, only use minified when not debugging
-    echo "char *$F=\"\\" > "$f.h.out"
+    printf "char *$F=\"" > "$f.h.out"
     if [ "$1" = "debug" ]; then
-        echo "shaders/$f\\" >> "$f.h.out" # only write filename
+        printf "shaders/$f" >> "$f.h.out" # only write filename
     else
         cat "$f.min" | sed 's/$/\\/' >> "$f.h.out" # useless use of cat?
         echo >> "$f.h.out"

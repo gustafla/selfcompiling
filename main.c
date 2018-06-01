@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 #include "read_file.c"
 #include "shaders.h.out"
-#include "unreeeal_superhero_3.xm.c"
+#include "music.xm.c"
 #include "xmplayer.c"
 #endif
 
@@ -15,9 +15,9 @@ void play(void *d, uint8_t *stream, int len) {
     xm_generate_samples((xm_context_t*)d, (float*)stream, (len/8));
 }
 
-void music() {
+xm_context_t *start_music(const char *moddata, size_t moddata_len) {
     xm_context_t *xm;
-    xm_create_context_safe(&xm, UNREEEAL_SUPERHERO_3_XM, UNREEEAL_SUPERHERO_3_XM_LEN, 48000);
+    xm_create_context_safe(&xm, moddata, moddata_len, 48000);
 
     SDL_AudioSpec want, have;
     want.freq = 48000;
@@ -29,6 +29,7 @@ void music() {
 
     uint32_t dev = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
     SDL_PauseAudioDevice(dev, 0);
+    return xm;
 }
 
 unsigned compile_shader(unsigned type, char *src) {
@@ -156,7 +157,7 @@ int main() {
     glEnableVertexAttribArray(1);
 
     // Start playing music
-    music();
+    xm_context_t *xm = start_music(MUSIC_XM, MUSIC_XM_LEN);
 
     SDL_Event e;
     while(1) {
