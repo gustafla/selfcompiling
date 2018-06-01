@@ -176,7 +176,7 @@ int main() {
             } else if (e.key.keysym.sym == SDLK_r) {
                 s = link_program(TRIVIAL_VERT, *SCENES[scene]);
             } else if (e.key.keysym.sym == SDLK_n) {
-                scene = (scene + 1) % (sizeof(SCENES)/sizeof(char**));
+                scene = (scene + 1) % (sizeof(SCENES)/sizeof(SCENES[0]));
                 s = link_program(TRIVIAL_VERT, *SCENES[scene]);
             }
         }
