@@ -54,7 +54,8 @@ vec3 grad(vec3 p) {
 }
 
 vec3 checkerboard(vec3 p, float f) {
-    return vec3(clamp(sin(p.x*f)*sin(p.z*f)*(1./EPS), 0., 1.));
+    float pattern = float(mod(int(p.x*f+mod(int(p.z*f), 2)), 2));
+    return vec3(pattern);
 }
 
 vec3 shade(vec3 p) {

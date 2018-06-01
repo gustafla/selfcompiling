@@ -174,14 +174,10 @@ int main() {
             if (e.key.keysym.sym == SDLK_ESCAPE || e.key.keysym.sym == SDLK_q) {
                 break;
             } else if (e.key.keysym.sym == SDLK_r) {
-                if (!(s = link_program(TRIVIAL_VERT, *SCENES[scene]))) {
-                    break;
-                }
+                s = link_program(TRIVIAL_VERT, *SCENES[scene]);
             } else if (e.key.keysym.sym == SDLK_n) {
                 scene = (scene + 1) % (sizeof(SCENES)/sizeof(char**));
-                if (!(s = link_program(TRIVIAL_VERT, *SCENES[scene]))) {
-                    break;
-                }
+                s = link_program(TRIVIAL_VERT, *SCENES[scene]);
             }
         }
 #else
