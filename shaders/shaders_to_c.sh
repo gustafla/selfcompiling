@@ -3,11 +3,14 @@
 TERM=xterm # Needed to avoid Mono bugs
 SOURCEFILES=`find * -name '*.frag' -o -name '*.vert'`
 OUTPUTFILE="../shaders.h.out"
+if [ -z "$SHADER_MINIFIER" ]; then
+    SHADER_MINIFIER=~/misc/shader_minifier.exe
+fi
 
 # Minify with Crtl-Alt-Test's tool when needed
 if [ ! "$1" = "debug" ]; then
     for f in $SOURCEFILES; do
-        mono ~/misc/shader_minifier.exe --format none -o "$f.min" "$f"
+        mono $SHADER_MINIFIER --format none -o "$f.min" "$f"
     done
 fi
 
