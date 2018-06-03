@@ -13,7 +13,7 @@ float sphere(vec3 p, float r) {
 }
 
 vec2 middle_sphere(vec3 p) {
-    return vec2(sphere(p - vec3(0., 0., 4.), 1.), 0.);
+    return vec2(sphere(p - vec3(sin(u_time/200.)*4., 0., 4.), 1.), 0.);
 }
 
 vec2 floor_plane(vec3 p) {

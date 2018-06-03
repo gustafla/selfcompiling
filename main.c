@@ -98,12 +98,7 @@ unsigned create_buf(unsigned target, size_t size, const void *data) {
     return buf;
 }
 
-void render(unsigned program, unsigned vertex_array) {
-    glUseProgram(program);
-
-    unsigned u_time = glGetUniformLocation(program, "u_time");
-    glUniform1f(u_time, SDL_GetTicks()/1000.);
-
+void render(unsigned vertex_array) {
     glBindVertexArray(vertex_array);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
@@ -163,7 +158,10 @@ int main() {
     while(1) {
         //glClear(GL_COLOR_BUFFER_BIT);
 
-        render(s, vertex_array);
+        glUseProgram(s);
+        glUniform1f(glGetUniformLocation(s, "u_time"), (float)xm->current_row);
+
+        render(vertex_array);
 
         SDL_GL_SwapWindow(w);
 
