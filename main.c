@@ -99,9 +99,11 @@ void render(unsigned s) {
         -1., -1., 0., 0., 0.
     };
     size_t sf = sizeof(float);
-    glVertexAttribPointer(glGetAttribLocation(s, "a_pos"), 3, GL_FLOAT, 0, 5 * sf, (void*)vertices);
+    int a_pos = glGetAttribLocation(s, "a_pos");
+    int a_tpos = glGetAttribLocation(s, "a_texturePos");
+    glVertexAttribPointer(a_pos, 3, GL_FLOAT, 0, 5 * sf, (void*)vertices);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(glGetAttribLocation(s, "a_texturePos"), 2, GL_FLOAT, 0, 5 * sf, (void*)&vertices[3]);
+    glVertexAttribPointer(a_tpos, 2, GL_FLOAT, 0, 5 * sf, (void*)&vertices[3]);
     glEnableVertexAttribArray(1);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
@@ -109,14 +111,11 @@ void render(unsigned s) {
 int main() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
-    // MAJOR_VERSION = 17, MINOR_VERSION = 18, PROFILE_MASK = 21
-    SDL_GL_SetAttribute(17, 2);
-    SDL_GL_SetAttribute(18, 0);
-    // SDL_GL_CONTEXT_PROFILE_CORE == 0x1
-    // SDL_GL_CONTEXT_PROFILE_ES == 0x4
-    SDL_GL_SetAttribute(21, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 
-    SDL_Window *w = SDL_CreateWindow("testi", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Window *w = SDL_CreateWindow("test", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GL_CreateContext(w); // SDL_GL_LoadLibrary, SDL_GL_MakeCurrent?
 
     // Compile and link shaders
@@ -134,7 +133,7 @@ int main() {
         //glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(s);
-        glUniform1f(glGetUniformLocation(s, "u_time"), (float)xm->current_row);
+        glUniform1f(glGetUniformLocation(s, "u_time"), (float)SDL_GetTicks()/1000.f);
 
         render(s);
 

@@ -38,6 +38,15 @@ const uint16_t AUDIO_F32 = 0x8120;
 const uint32_t SDL_QUIT = 0x100, SDL_KEYDOWN = 0x300;
 const uint32_t SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10;
 const uint32_t SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2;
+enum {
+    SDL_GL_CONTEXT_MAJOR_VERSION = 17,
+    SDL_GL_CONTEXT_MINOR_VERSION = 18,
+    SDL_GL_CONTEXT_PROFILE_MASK = 21
+};
+enum {
+    SDL_GL_CONTEXT_PROFILE_CORE = 0x1,
+    SDL_GL_CONTEXT_PROFILE_ES = 0x4
+};
 
 // ------------------------------------ OpenGL API -----------------------------
 //
