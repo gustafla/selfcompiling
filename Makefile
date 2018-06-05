@@ -1,6 +1,7 @@
 TARGET=demo
 CAT_SRC=$(TARGET).out
 CC=gcc
+CFLAGS=$(shell sdl2-config --cflags) -O2 -DDEBUG -g
 LFLAGS=$(shell sdl2-config --libs) -lGLESv2 -lm
 
 SHADERS_TO_C=sh shaders_to_c.sh
@@ -22,7 +23,7 @@ $(TARGET): shaders.h.out $(CAT_SRC) launcher.sh
 .PHONY: debug clean
 
 debug: shaders.h.out main.c
-	$(CC) $(shell sdl2-config --cflags) -DDEBUG -O2 -g $(LFLAGS) -o $(TARGET) main.c
+	$(CC) $(CFLAGS) $(LFLAGS) -o $(TARGET) main.c
 
 clean:
 	rm -f $(TARGET)
