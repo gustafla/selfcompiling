@@ -5,4 +5,4 @@ Dependencies:
 - my c-minifier (minify), in your path
 - unifdef
 - GNU Make and a dash-compatible /bin/sh
-- (Optionally SDL2, GLES2)
+- (Optionally SDL2, GLES2, also -dev packages)

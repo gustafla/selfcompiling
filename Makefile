@@ -10,7 +10,6 @@ debug:SHADERS_TO_C=sh shaders_to_c.sh debug
 
 # shaders.h.out has to be excluded because trim can't deal with it
 # music.xm.c has to be excluded because minify can't deal with it
-HEADERS=api.c
 SOURCES=xmplayer.c main.c
 
 # Concatenate and compress demo sources into executable
@@ -33,12 +32,10 @@ clean:
 	find . -name "*.out.c" -delete
 
 $(CAT_SRC): $(HEADERS) music.xm.c $(SOURCES)
-	echo > $(CAT_SRC)
-	for f in $(HEADERS); do cat $$f >> $(CAT_SRC); done
-	cat music.xm.c >> $(CAT_SRC)
+	cp music.xm.c $(CAT_SRC)
 	echo > out.min
 	for f in $(SOURCES); do cat $$f >> out.min; done
-	minify $(patsubst %,-h %,$(HEADERS)) -h shaders.h.out out.min >> $(CAT_SRC)
+	minify -h api.c -h shaders.h.out out.min >> $(CAT_SRC)
 
 shaders.h.out:
 	cd shaders; $(SHADERS_TO_C)

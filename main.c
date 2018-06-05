@@ -1,8 +1,9 @@
 #include <stdio.h>
 
-#ifdef DEBUG
 #include <SDL2/SDL.h>
 #include <GLES2/gl2.h>
+
+#ifdef DEBUG
 #include "read_file.c"
 #include "shaders.h.out"
 #include "music.xm.c"
