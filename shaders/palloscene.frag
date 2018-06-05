@@ -54,7 +54,7 @@ vec3 grad(vec3 p) {
 }
 
 vec3 checkerboard(vec3 p, float f) {
-    float pattern = float(mod(int(p.x*f+mod(int(p.z*f), 2)), 2));
+    float pattern = clamp(sin(p.x*f)*sin(p.z*f)*(1./EPS), 0., 1.);
     return vec3(pattern);
 }
 
@@ -75,6 +75,6 @@ vec3 shade(vec3 p) {
 void main() {
     vec3 ray = normalize(vec3((v_texturePos*2.-1.), 1.));
     vec3 p = march(vec3(0.), ray);
-    fragColor = vec4(shade(p), 1.);
+    gl_FragColor = vec4(shade(p), 1.);
 }
 

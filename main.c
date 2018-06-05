@@ -88,19 +88,21 @@ unsigned link_program(char *vertex_src, char *fragment_src) {
     return p;
 }
 
-unsigned create_buf(unsigned target, size_t size, const void *data) {
-    unsigned buf;
-    glGenBuffers(1, &buf);
-    glBindBuffer(target, buf);
-    glBufferData(target, size, data, GL_STATIC_DRAW);
-    glBindBuffer(target, 0);
-    return buf;
-}
-
-void render(unsigned vertex_array) {
-    glBindVertexArray(vertex_array);
+void render() {
+    float const vertices[] = {
+        -1., -1., 0., 0., 0.,
+        1., -1., 0., 1., 0.,
+        1., 1., 0., 1., 1.,
+        1., 1., 0., 1., 1.,
+        -1., 1., 0., 0., 1.,
+        -1., -1., 0., 0., 0.
+    };
+    size_t sf = sizeof(float);
+    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 5 * sf, (void*)vertices);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, 0, 5 * sf, (void*)&vertices[3]);
+    glEnableVertexAttribArray(1);
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    glBindVertexArray(0);
 }
 
 int main() {
@@ -123,29 +125,6 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    // Generate a VBO
-    float const vertices[] = {
-        -1., -1., 0., 0., 0.,
-        1., -1., 0., 1., 0.,
-        1., 1., 0., 1., 1.,
-        1., 1., 0., 1., 1.,
-        -1., 1., 0., 0., 1.,
-        -1., -1., 0., 0., 0.
-    };
-
-    unsigned buf = create_buf(GL_ARRAY_BUFFER, sizeof(vertices), vertices);
-
-    // Generate the VAO for the shader quad
-    unsigned vertex_array;
-    glGenVertexArrays(1, &vertex_array);
-    glBindVertexArray(vertex_array);
-    glBindBuffer(GL_ARRAY_BUFFER, buf);
-    size_t sf = sizeof(float);
-    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 5 * sf, (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, 0, 5 * sf, (void*)(3*sf));
-    glEnableVertexAttribArray(1);
-
     // Start playing music
     xm_context_t *xm = start_music(MUSIC_XM, MUSIC_XM_LEN);
 
@@ -156,7 +135,7 @@ int main() {
         glUseProgram(s);
         glUniform1f(glGetUniformLocation(s, "u_time"), (float)xm->current_row);
 
-        render(vertex_array);
+        render();
 
         SDL_GL_SwapWindow(w);
 
