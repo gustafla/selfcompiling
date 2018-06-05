@@ -1,5 +1,6 @@
 TARGET=demo
 CAT_SRC=$(TARGET).out
+
 CC=gcc
 CFLAGS=$(shell sdl2-config --cflags) -O2 -DDEBUG -g
 LFLAGS=$(shell sdl2-config --libs) -lGLESv2 -lm
