@@ -43,15 +43,15 @@ unsigned compile_shader(unsigned type, char *src) {
             full_src[0] = "#version 100\n"
                 "precision mediump float;\n"
                 "attribute vec3 a_pos;\n"
-                "attribute vec2 a_texturePos;\n"
+                "attribute vec2 a_texpos;\n"
                 "varying vec3 v_pos;\n"
-                "varying vec2 v_texturePos;\n";
+                "varying vec2 v_texpos;\n";
             break;
         case 0x8B30: // fragment shader
             full_src[0] = "#version 100\n"
                 "precision mediump float;\n"
                 "uniform float u_time;\n"
-                "varying vec2 v_texturePos;\n";
+                "varying vec2 v_texpos;\n";
             break;
         default:
             full_src[0] = "#version 100\n";
@@ -100,10 +100,10 @@ void render(unsigned s) {
     };
     size_t sf = sizeof(float);
     int a_pos = glGetAttribLocation(s, "a_pos");
-    int a_tpos = glGetAttribLocation(s, "a_texturePos");
+    int a_texpos = glGetAttribLocation(s, "a_texpos");
     glVertexAttribPointer(a_pos, 3, GL_FLOAT, 0, 5 * sf, (void*)vertices);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(a_tpos, 2, GL_FLOAT, 0, 5 * sf, (void*)&vertices[3]);
+    glVertexAttribPointer(a_texpos, 2, GL_FLOAT, 0, 5 * sf, (void*)(vertices+3));
     glEnableVertexAttribArray(1);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }

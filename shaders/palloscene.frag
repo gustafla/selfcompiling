@@ -73,7 +73,7 @@ vec3 shade(vec3 p) {
 }
 
 void main() {
-    vec3 ray = normalize(vec3((v_texturePos*2.-1.), 1.));
+    vec3 ray = normalize(vec3((v_texpos*2.-1.), 1.));
     vec3 p = march(vec3(0.), ray);
     gl_FragColor = vec4(shade(p), 1.);
 }

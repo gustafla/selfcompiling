@@ -1,4 +1,4 @@
 void main() {
-    v_texturePos = a_texturePos;
+    v_texpos = a_texpos;
     gl_Position = vec4(a_pos, 1.);
 }
