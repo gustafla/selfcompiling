@@ -1,7 +1,7 @@
 TARGET=demo
 CAT_SRC=$(TARGET).out
 CC=gcc
-LFLAGS=$(shell sdl2-config --libs) -lGL -lGLEW -lm
+LFLAGS=$(shell sdl2-config --libs) -lGLESv2 -lm
 
 SHADERS_TO_C=sh shaders_to_c.sh
 debug:SHADERS_TO_C=sh shaders_to_c.sh debug

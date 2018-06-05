@@ -1,8 +1,8 @@
 #include <stdio.h>
 
 #ifdef DEBUG
-#include <GL/glew.h>
 #include <SDL2/SDL.h>
+#include <GLES2/gl2.h>
 #include "read_file.c"
 #include "shaders.h.out"
 #include "music.xm.c"
@@ -39,22 +39,21 @@ unsigned compile_shader(unsigned type, char *src) {
     char *full_src[2];
     switch (type) {
         case 0x8B31: // vertex shader
-            full_src[0] = "#version 330\n"
+            full_src[0] = "#version 100\n"
                 "precision mediump float;\n"
-                "layout (location = 0) in vec3 a_pos;\n"
-                "layout (location = 1) in vec2 a_texturePos;\n"
-                "out vec3 v_pos;\n"
-                "out vec2 v_texturePos;\n";
+                "attribute vec3 a_pos;\n"
+                "attribute vec2 a_texturePos;\n"
+                "varying vec3 v_pos;\n"
+                "varying vec2 v_texturePos;\n";
             break;
         case 0x8B30: // fragment shader
-            full_src[0] = "#version 330\n"
+            full_src[0] = "#version 100\n"
                 "precision mediump float;\n"
                 "uniform float u_time;\n"
-                "out vec4 fragColor;\n"
-                "in vec2 v_texturePos;\n";
+                "varying vec2 v_texturePos;\n";
             break;
         default:
-            full_src[0] = "#version 330\n";
+            full_src[0] = "#version 100\n";
     }
 #ifdef DEBUG
     read_file_to_str(&full_src[1], src);
@@ -108,18 +107,14 @@ int main() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
     // MAJOR_VERSION = 17, MINOR_VERSION = 18, PROFILE_MASK = 21
-    SDL_GL_SetAttribute(17, 3);
-    SDL_GL_SetAttribute(18, 3);
+    SDL_GL_SetAttribute(17, 2);
+    SDL_GL_SetAttribute(18, 0);
     // SDL_GL_CONTEXT_PROFILE_CORE == 0x1
-    SDL_GL_SetAttribute(21, 1);
+    // SDL_GL_CONTEXT_PROFILE_ES == 0x4
+    SDL_GL_SetAttribute(21, 4);
 
     SDL_Window *w = SDL_CreateWindow("testi", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GL_CreateContext(w); // SDL_GL_LoadLibrary, SDL_GL_MakeCurrent?
-
-    // Load OpenGL functions using SDL_GetProcAddress if needed
-#ifdef DEBUG
-    glewInit();
-#endif
 
     // Compile and link shaders
     unsigned scene = 0;
