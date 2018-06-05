@@ -74,6 +74,7 @@ void glBindVertexArray(unsigned);
 void glVertexAttribPointer(unsigned, int, unsigned, unsigned char, int, const void*);
 void glEnableVertexAttribArray(unsigned);
 int glGetUniformLocation(unsigned, const char*);
+int glGetAttribLocation(unsigned, const char*);
 void glUniform1f(int, float);
 
 const unsigned GL_COLOR_BUFFER_BIT = 0x4000;

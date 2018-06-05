@@ -88,7 +88,7 @@ unsigned link_program(char *vertex_src, char *fragment_src) {
     return p;
 }
 
-void render() {
+void render(unsigned s) {
     float const vertices[] = {
         -1., -1., 0., 0., 0.,
         1., -1., 0., 1., 0.,
@@ -98,9 +98,9 @@ void render() {
         -1., -1., 0., 0., 0.
     };
     size_t sf = sizeof(float);
-    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 5 * sf, (void*)vertices);
+    glVertexAttribPointer(glGetAttribLocation(s, "a_pos"), 3, GL_FLOAT, 0, 5 * sf, (void*)vertices);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, 0, 5 * sf, (void*)&vertices[3]);
+    glVertexAttribPointer(glGetAttribLocation(s, "a_texturePos"), 2, GL_FLOAT, 0, 5 * sf, (void*)&vertices[3]);
     glEnableVertexAttribArray(1);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
@@ -135,7 +135,7 @@ int main() {
         glUseProgram(s);
         glUniform1f(glGetUniformLocation(s, "u_time"), (float)xm->current_row);
 
-        render();
+        render(s);
 
         SDL_GL_SwapWindow(w);
 
