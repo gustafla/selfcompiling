@@ -65,31 +65,30 @@ typedef unsigned char GLboolean;
 typedef signed char GLbyte;
 typedef char GLchar;
 typedef float GLfloat;
+typedef void GLvoid;
 
-void glClearColor(float, float, float, float); // rgba
-void glClear(unsigned); // mask
-void glDrawArrays(unsigned, int, int); // mode, first, count
-void glGenBuffers(unsigned, unsigned*); // size, buffers
-void glBindBuffer(unsigned, unsigned); // target, buffer
-void glBufferData(unsigned, ptrdiff_t, const void*, unsigned);
-unsigned glCreateShader(unsigned);
-void glShaderSource(unsigned, int, const char**, const int*);
-void glCompileShader(unsigned);
-void glGetShaderiv(unsigned, unsigned, int*);
-void glGetShaderInfoLog(unsigned, int, int*, char*);
-unsigned glCreateProgram(void);
-void glAttachShader(unsigned, unsigned);
-void glLinkProgram(unsigned);
-void glGetProgramiv(unsigned, unsigned, int*);
-void glGetProgramInfoLog(unsigned, int, int*, char*);
-void glUseProgram(unsigned);
-void glGenVertexArrays(int, unsigned*);
-void glBindVertexArray(unsigned);
-void glVertexAttribPointer(unsigned, int, unsigned, unsigned char, int, const void*);
-void glEnableVertexAttribArray(unsigned);
-int glGetUniformLocation(unsigned, const char*);
-int glGetAttribLocation(unsigned, const char*);
-void glUniform1f(int, float);
+void glClearColor(GLfloat, GLfloat, GLfloat, GLfloat);
+void glClear(GLbitfiled);
+void glDrawArrays(GLenum, GLint, GLsizei);
+void glGenBuffers(GLsizei, GLuint*);
+void glBindBuffer(GLenum, GLuint);
+void glBufferData(GLenum, GLsizeiptr, const GLvoid*, GLenum);
+GLuint glCreateShader(GLenum);
+void glShaderSource(GLuint, GLsizei, const GLchar* const*, const GLint*);
+void glCompileShader(GLuint);
+void glGetShaderiv(GLuint, GLenum, GLint*);
+void glGetShaderInfoLog(GLuint, GLsizei, GLsizei*, GLchar*);
+GLuint glCreateProgram(void);
+void glAttachShader(GLuint, GLuint);
+void glLinkProgram(GLuint);
+void glGetProgramiv(GLuint, GLenum, GLint*);
+void glGetProgramInfoLog(GLuint, GLsizei, GLsizei*, GLchar*);
+void glUseProgram(GLuint);
+void glVertexAttribPointer(GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
+void glEnableVertexAttribArray(GLuint);
+int glGetUniformLocation(GLuint, const GLchar*);
+int glGetAttribLocation(GLuint, const GLchar*);
+void glUniform1f(GLint, GLfloat);
 
 const unsigned GL_COLOR_BUFFER_BIT = 0x4000;
 const unsigned GL_FLOAT = 0x1406;
