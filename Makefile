@@ -16,7 +16,8 @@ SOURCES=xmplayer.c main.c
 $(TARGET): shaders.h.out $(CAT_SRC) launcher.sh
 	cp shaders.h.out $(CAT_SRC).c
 	sh trim.sh $(CAT_SRC) >> $(CAT_SRC).c
-	cp launcher.sh $(TARGET)
+	sh trim.sh launcher.sh > $(TARGET)
+	echo >> $(TARGET)
 	unifdef -x 2 -UDEBUG $(CAT_SRC).c | lzma -9e -T0 - >> $(TARGET)
 	chmod +x $(TARGET)
 
