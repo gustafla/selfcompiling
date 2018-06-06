@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <SDL.h>
 #include <GLES2/gl2.h>
@@ -152,5 +153,5 @@ int main() {
 #endif
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
