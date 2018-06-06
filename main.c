@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <GLES2/gl2.h>
 
 #ifdef DEBUG
@@ -33,38 +33,32 @@ xm_context_t *start_music(const char *moddata, size_t moddata_len) {
     return xm;
 }
 
-unsigned compile_shader(unsigned type, char *src) {
-    unsigned s = glCreateShader(type);
+GLuint compile_shader(GLenum type, char *src) {
+    GLuint s = glCreateShader(type);
 
     // add correct header to shader
-    char *full_src[2];
+    char *full_src[3];
+    full_src[0] = "#version 100\nprecision mediump float;\n";
     switch (type) {
-        case 0x8B31: // vertex shader
-            full_src[0] = "#version 100\n"
-                "precision mediump float;\n"
-                "attribute vec3 a_pos;\n"
+        case GL_VERTEX_SHADER:
+            full_src[1] = "attribute vec3 a_pos;\n"
                 "attribute vec2 a_texpos;\n"
                 "varying vec3 v_pos;\n"
                 "varying vec2 v_texpos;\n";
             break;
-        case 0x8B30: // fragment shader
-            full_src[0] = "#version 100\n"
-                "precision mediump float;\n"
-                "uniform float u_time;\n"
+        case GL_FRAGMENT_SHADER:
+            full_src[1] = "uniform float u_time;\n"
                 "varying vec2 v_texpos;\n";
-            break;
-        default:
-            full_src[0] = "#version 100\n";
     }
 #ifdef DEBUG
-    read_file_to_str(&full_src[1], src);
+    read_file_to_str(&full_src[2], src);
 #else
-    full_src[1] = src;
+    full_src[2] = src;
 #endif
 
-    glShaderSource(s, 2, (const char**)full_src, NULL);
+    glShaderSource(s, 3, (const GLchar**)full_src, NULL);
     glCompileShader(s);
-    int success; char info[512];
+    GLint success; GLchar info[512];
     glGetShaderiv(s, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(s, 512, NULL, info);
@@ -74,12 +68,12 @@ unsigned compile_shader(unsigned type, char *src) {
 }
 
 // Params are filenames in debug builds, but shader source code otherwise
-unsigned link_program(char *vertex_src, char *fragment_src) {
-    unsigned p = glCreateProgram();
+GLuint link_program(char *vertex_src, char *fragment_src) {
+    GLuint p = glCreateProgram();
     glAttachShader(p, compile_shader(GL_VERTEX_SHADER, vertex_src));
     glAttachShader(p, compile_shader(GL_FRAGMENT_SHADER, fragment_src));
     glLinkProgram(p);
-    int success; char info[512];
+    GLint success; GLchar info[512];
     glGetProgramiv(p, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(p, 512, NULL, info);
@@ -89,8 +83,8 @@ unsigned link_program(char *vertex_src, char *fragment_src) {
     return p;
 }
 
-void render(unsigned s) {
-    float const vertices[] = {
+void render(GLuint s) {
+    GLfloat const vertices[] = {
         -1., -1., 0., 0., 0.,
         1., -1., 0., 1., 0.,
         1., 1., 0., 1., 1.,
@@ -98,9 +92,9 @@ void render(unsigned s) {
         -1., 1., 0., 0., 1.,
         -1., -1., 0., 0., 0.
     };
-    size_t sf = sizeof(float);
-    int a_pos = glGetAttribLocation(s, "a_pos");
-    int a_texpos = glGetAttribLocation(s, "a_texpos");
+    size_t sf = sizeof(GLfloat);
+    GLint a_pos = glGetAttribLocation(s, "a_pos");
+    GLint a_texpos = glGetAttribLocation(s, "a_texpos");
     glVertexAttribPointer(a_pos, 3, GL_FLOAT, 0, 5 * sf, (void*)vertices);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(a_texpos, 2, GL_FLOAT, 0, 5 * sf, (void*)(vertices+3));
@@ -120,20 +114,20 @@ int main() {
 
     // Compile and link shaders
     unsigned scene = 0;
-    unsigned s = link_program(TRIVIAL_VERT, *SCENES[scene]);
+    GLuint s = link_program(TRIVIAL_VERT, *SCENES[scene]);
     if (!s) {
         return EXIT_FAILURE;
     }
 
     // Start playing music
-    xm_context_t *xm = start_music(MUSIC_XM, MUSIC_XM_LEN);
+    //xm_context_t *xm = start_music(MUSIC_XM, MUSIC_XM_LEN);
 
     SDL_Event e;
     while(1) {
         //glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(s);
-        glUniform1f(glGetUniformLocation(s, "u_time"), (float)SDL_GetTicks()/1000.f);
+        glUniform1f(glGetUniformLocation(s, "u_time"), (GLfloat)SDL_GetTicks()/1000.f);
 
         render(s);
 

@@ -55,14 +55,17 @@ const uint32_t SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2;
 // SDL_GL_GetProcAddress is not needed on most sane unixlike systems,
 // especially for this programs as simple as this
 //
-// typedef int GLsizei;
-// typedef int GLint;
-// typedef ptrdiff_t GLsizeiptr;
-// typedef unsigned int GLenum;
-// typedef unsigned int GLuint;
-// typedef unsigned int GLbitfiled;
-// typedef unsigned char GLboolean;
-// typedef signed char GLbyte;
+typedef int GLsizei;
+typedef int GLint;
+typedef ptrdiff_t GLsizeiptr;
+typedef unsigned int GLenum;
+typedef unsigned int GLuint;
+typedef unsigned int GLbitfiled;
+typedef unsigned char GLboolean;
+typedef signed char GLbyte;
+typedef char GLchar;
+typedef float GLfloat;
+
 void glClearColor(float, float, float, float); // rgba
 void glClear(unsigned); // mask
 void glDrawArrays(unsigned, int, int); // mode, first, count
