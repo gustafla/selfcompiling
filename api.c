@@ -23,30 +23,32 @@ typedef struct {
     void *userdata;
 } SDL_AudioSpec;
 
+typedef enum {
+    SDL_GL_CONTEXT_MAJOR_VERSION = 17,
+    SDL_GL_CONTEXT_MINOR_VERSION = 18,
+    SDL_GL_CONTEXT_PROFILE_MASK = 21
+} SDL_GLattr;
+
+typedef enum {
+    SDL_GL_CONTEXT_PROFILE_CORE = 0x1,
+    SDL_GL_CONTEXT_PROFILE_ES = 0x4
+} SDL_GLprofile;
+
 int SDL_Init(uint32_t);
 SDL_Window *SDL_CreateWindow(const char*, int, int, int, int, uint32_t);
 uint32_t SDL_GetTicks(void);
-int SDL_GL_SetAttribute(char, int);
+int SDL_GL_SetAttribute(SDL_GLattr, int);
 void *SDL_GL_CreateContext(SDL_Window*);
 void SDL_GL_SwapWindow(SDL_Window*);
 int SDL_PollEvent(SDL_Event*);
 uint32_t SDL_OpenAudioDevice(const char*, int,
-        const SDL_AudioSpec*, const SDL_AudioSpec*, int);
+const SDL_AudioSpec*, const SDL_AudioSpec*, int);
 void SDL_PauseAudioDevice(uint32_t, int);
 
 const uint16_t AUDIO_F32 = 0x8120;
 const uint32_t SDL_QUIT = 0x100, SDL_KEYDOWN = 0x300;
 const uint32_t SDL_INIT_VIDEO = 0x20, SDL_INIT_AUDIO = 0x10;
 const uint32_t SDL_WINDOW_FULLSCREEN = 0x1, SDL_WINDOW_OPENGL = 0x2;
-enum {
-    SDL_GL_CONTEXT_MAJOR_VERSION = 17,
-    SDL_GL_CONTEXT_MINOR_VERSION = 18,
-    SDL_GL_CONTEXT_PROFILE_MASK = 21
-};
-enum {
-    SDL_GL_CONTEXT_PROFILE_CORE = 0x1,
-    SDL_GL_CONTEXT_PROFILE_ES = 0x4
-};
 
 // ------------------------------------ OpenGL API -----------------------------
 //
