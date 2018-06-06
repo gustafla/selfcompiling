@@ -36,7 +36,7 @@ $(CAT_SRC): $(HEADERS) music.xm.c $(SOURCES)
 	cp music.xm.c $(CAT_SRC)
 	echo > out.min
 	for f in $(SOURCES); do cat $$f >> out.min; done
-	minify -h api.c -h shaders.h.out out.min >> $(CAT_SRC)
+	minify -h api.h -h shaders.h.out out.min >> $(CAT_SRC)
 
 shaders.h.out:
 	cd shaders; $(SHADERS_TO_C)
