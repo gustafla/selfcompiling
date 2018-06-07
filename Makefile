@@ -2,8 +2,9 @@ TARGET=demo
 CAT_SRC=$(TARGET).out
 
 CC=gcc
-CFLAGS=$(shell pkg-config --cflags sdl2 glesv2) -O2 -DDEBUG -g
-LFLAGS=$(shell pkg-config --libs sdl2 glesv2) -lm
+PKGS=sdl2 glesv2
+CFLAGS=$(shell pkg-config --cflags $(PKGS)) -O2 -DDEBUG -g
+LDLIBS=$(shell pkg-config --libs $(PKGS)) -lm
 
 SHADERS_TO_C=sh shaders_to_c.sh
 debug:SHADERS_TO_C=sh shaders_to_c.sh debug
@@ -24,7 +25,7 @@ $(TARGET): shaders.h.out $(CAT_SRC) launcher.sh
 .PHONY: debug clean
 
 debug: shaders.h.out main.c
-	$(CC) main.c -o $(TARGET) $(CFLAGS) $(LFLAGS)
+	$(CC) main.c -o $(TARGET) $(CFLAGS) $(LDLIBS)
 
 clean:
 	rm -f $(TARGET)
