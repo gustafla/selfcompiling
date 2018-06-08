@@ -21,8 +21,8 @@ debug:SHADERS_TO_C=sh shaders_to_c.sh debug
 # Concatenate and compress demo sources into executable
 $(TARGET): shaders.h.out $(CAT_SRC) $(LAUNCHER)
 	cp shaders.h.out $(CAT_SRC).c
-	sh trim.sh $(CAT_SRC) >> $(CAT_SRC).c
-	sh trim.sh $(LAUNCHER) > $(TARGET)
+	./trim.sh $(CAT_SRC) >> $(CAT_SRC).c
+	./trim.sh $(LAUNCHER) > $(TARGET)
 	echo >> $(TARGET)
 	unifdef -x 2 -UDEBUG $(CAT_SRC).c | lzma -9e -T0 - >> $(TARGET)
 	chmod +x $(TARGET)

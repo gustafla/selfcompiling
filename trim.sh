@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # remove extra spaces, comments and empty lines
 FILECONTENTS=`sed -rb 's/ {2,}/ /g' "$1" | sed -rb 's/\/\/.*$//g' | sed -rb 's/\/\*.*\*\///g' | sed -b '/^$/d'`
