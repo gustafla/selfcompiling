@@ -49,6 +49,7 @@ GLuint compile_shader(GLenum type, char *src) {
             break;
         case GL_FRAGMENT_SHADER:
             full_src[1] = "uniform float u_time;\n"
+                "uniform float u_aspect_ratio;\n"
                 "varying vec2 v_texpos;\n";
     }
 #ifdef DEBUG
@@ -104,13 +105,14 @@ void render(GLuint s) {
 }
 
 int main() {
+    int width=1280, height=720;
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 
-    SDL_Window *w = SDL_CreateWindow("test", 0, 0, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Window *w = SDL_CreateWindow("test", 0, 0, width, height, SDL_WINDOW_OPENGL);
     SDL_GL_CreateContext(w);
 
     // Compile and link shaders
@@ -121,7 +123,7 @@ int main() {
     }
 
     // Start playing music
-    //xm_context_t *xm = start_music(MUSIC_XM, MUSIC_XM_LEN);
+    xm_context_t *xm = start_music(MUSIC_XM, MUSIC_XM_LEN);
 
     SDL_Event e;
     while(1) {
@@ -129,6 +131,7 @@ int main() {
 
         glUseProgram(s);
         glUniform1f(glGetUniformLocation(s, "u_time"), (GLfloat)SDL_GetTicks()/1000.f);
+        glUniform1f(glGetUniformLocation(s, "u_aspect_ratio"), (GLfloat)width/height);
 
         render(s);
 
