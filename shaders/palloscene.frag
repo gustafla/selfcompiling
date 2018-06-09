@@ -1,66 +1,5 @@
-const int ITR=50;
-const float EPS=0.001;
-const float MAX_T=120.;
-
-int material = 0;
-
-float xz_plane(vec3 p) {
-    return p.y;
-}
-
-float sphere(vec3 p, float r) {
-    return length(p) - r;
-}
-
-vec2 middle_sphere(vec3 p) {
-    //return vec2(sphere(p - vec3(2.8, 2.5, 5.), 1.), 0.);
-    return vec2(sphere(p - vec3(4., 2.5, 4.), 0.8), 0.);
-}
-
-vec2 floor_plane(vec3 p) {
-    return vec2(xz_plane(p - vec3(0., -1., 0.)), 1.);
-}
-
-vec2 sdf(vec3 p) {
-    vec2 ms = middle_sphere(p);
-    vec2 fp = floor_plane(p);
-    if (ms.x < fp.x) {
-        return ms;
-    } else {
-        return fp;
-    }
-}
-
-vec3 march(vec3 cam, vec3 ray) {
-    vec2 dist;
-    float t=0.;
-    for (int i=0; i<ITR; i++) {
-        dist = sdf(cam + ray * t);
-        t += dist.x*1.6;
-        if (dist.x < EPS) {
-            material = int(dist.y);
-            break;
-        }
-        if (t > MAX_T) {
-            material = -1;
-            break;
-        }
-    }
-    return cam + ray * t;
-}
-
-vec3 grad(vec3 p) {
-    vec2 e = vec2(EPS, 0.);
-    return (vec3(sdf(p+e.xyy).x, sdf(p+e.yxy).x, sdf(p+e.yyx).x) - sdf(p).x) / e.x;
-}
-
-vec3 checkerboard(vec3 p, float f) {
-    float pattern = clamp(sin(p.x*f)*sin(p.z*f)*(1./EPS), 0., 1.);
-    return vec3(pattern);
-}
-
 float random (vec2 st) {
-    return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123);
+    return fract(sin(dot(st,vec2(12.9898,78.233)))*43758.5453123);
 }
 
 // Based on Morgan McGuire @morgan3d
@@ -89,6 +28,87 @@ float fbm (vec2 st) {
     return value;
 }
 
+const int ITR=50;
+const float EPS=0.001;
+const float MAX_T=120.;
+
+int material = 0;
+
+float xz_plane(vec3 p) {
+    return p.y;
+}
+
+float sphere(vec3 p, float r) {
+    return length(p) - r;
+}
+
+float sdBox( vec3 p, vec3 b ) {
+  vec3 d = abs(p) - b;
+  return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
+}
+
+vec2 middle_sphere(vec3 p) {
+    //return vec2(sphere(p - vec3(2.8, 2.5, 5.), 1.), 0.);
+    return vec2(sphere(p - vec3(4., 2.5, 4.), 0.8), 0.);
+}
+
+vec2 floor_plane(vec3 p) {
+    vec2 aallot_pos = p.xz*0.5;
+    aallot_pos.x += sin(aallot_pos.y*2.+u_time*0.6)*0.2;
+    return vec2(xz_plane(p - vec3(0., -1., 0.) - fbm(aallot_pos)*0.2 + fbm(aallot_pos+u_time*0.4)*0.2), 1.);
+}
+
+vec2 boat(vec3 p) {
+    float a = 0.6;
+    vec2 base = vec2(sdBox(vec3(p.x * cos(a) - p.z * sin(a), p.y, p.x * sin(a) + p.z * cos(a)) - vec3(-1.5, -1., 3.), vec3(.4, 0.1, 1.)), 2.);
+    vec2 top = vec2(sdBox(vec3(p.x * cos(a) - p.z * sin(a), p.y, p.x * sin(a) +p.z * cos(a)) - vec3(-1.5, -0.9, 3.), vec3(.3, 0.1, 0.8)), 3.);
+    vec2 piippu = vec2(sdBox(vec3(p.x * cos(a) - p.z * sin(a),
+                    p.y,p.x*sin(a)+p.z * cos(a)) - vec3(-1.5, -.7, 2.6), vec3(.06, 0.1,0.2)), 2.);
+    if (base.x < top.x) {
+        return base;
+    } else if (top.x < piippu.x) {
+        return top;
+    } else {
+        return piippu;
+    }
+}
+
+vec2 sdf(vec3 p) {
+    vec2 ms = middle_sphere(p);
+    vec2 fp = floor_plane(p);
+    vec2 bt = boat(p);
+    if (ms.x < fp.x) {
+        return ms;
+    } else if (fp.x < bt.x) {
+        return fp;
+    } else {
+        return bt;
+    }
+}
+
+vec3 march(vec3 cam, vec3 ray) {
+    vec2 dist;
+    float t=0.;
+    for (int i=0; i<ITR; i++) {
+        dist = sdf(cam + ray * t);
+        t += dist.x*1.2;
+        if (dist.x < EPS) {
+            material = int(dist.y);
+            break;
+        }
+        if (t > MAX_T) {
+            material = -1;
+            break;
+        }
+    }
+    return cam + ray * t;
+}
+
+vec3 grad(vec3 p) {
+    vec2 e = vec2(EPS, 0.);
+    return (vec3(sdf(p+e.xyy).x, sdf(p+e.yxy).x, sdf(p+e.yyx).x) - sdf(p).x) / e.x;
+}
+
 vec3 sky(vec3 p) {
     return mix(vec3(0.2, 0.3, 0.7), vec3(0.3, 0.5, 1.1), p.y/20.);
 }
@@ -101,15 +121,21 @@ vec3 shade(vec3 p) {
     vec3 light2 = normalize(vec3(-0.2, -1., 0.2));
     vec3 normal = normalize(grad(p));
 
+    float l = clamp(dot(-normal, light), 0., 1.);
+    l += clamp(dot(-normal, light2), 0., 1.);
+
     vec3 color = vec3(1., 1., 0.);
     float emit = 0.2;
     if (material == -1) {
         color = vec3(0.);
     } else if (material == 1) {
-        color = checkerboard(p, 10.);
+        color = vec3(0., 0., 1.);
+        l += pow(l, 12.);
+    } else if (material == 2) {
+        color = vec3(1., 0., 0.);
+    } else if (material == 3) {
+        color = vec3(1.);
     }
-    float l = clamp(dot(-normal, light), 0., 1.);
-    l += clamp(dot(-normal, light2), 0., 1.);
     return vec3(l * (color + emit));
 }
 
