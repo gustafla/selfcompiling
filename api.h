@@ -36,6 +36,7 @@ typedef enum {
 
 int SDL_Init(uint32_t);
 SDL_Window *SDL_CreateWindow(const char*, int, int, int, int, uint32_t);
+int SDL_ShowCursor(int);
 uint32_t SDL_GetTicks(void);
 int SDL_GL_SetAttribute(SDL_GLattr, int);
 void *SDL_GL_CreateContext(SDL_Window*);
