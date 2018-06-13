@@ -4,3 +4,5 @@
 [ ] Debug libxm crash on ARM
 [ ] Implement post-processing stages / frame buffer support
 [ ] Try out adding Rocket support
+[ ] Rewrite all post-processing to one program with a better string-handling
+    language than C
