@@ -47,3 +47,8 @@ $(CAT_SRC): $(HEADERS) music.xm.c $(SOURCES)
 
 shaders.h.out:
 	cd shaders; $(SHADERS_TO_C)
+
+.SUFFIXES:
+
+music.xm.c: music.xm
+	bin2cstr music.xm > music.xm.c
