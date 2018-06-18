@@ -1,5 +1,6 @@
-#include <stdint.h>
-#include <stddef.h>
+#ifdef DEBUG
+#include "includes.c"
+#endif
 
 // APIENTRY is not needed as this code is not meant for Winblows
 
@@ -36,6 +37,7 @@ typedef enum {
 
 int SDL_Init(uint32_t);
 SDL_Window *SDL_CreateWindow(const char*, int, int, int, int, uint32_t);
+void SDL_GetWindowSize(SDL_WIndow *, int*, int*);
 int SDL_ShowCursor(int);
 uint32_t SDL_GetTicks(void);
 int SDL_GL_SetAttribute(SDL_GLattr, int);
@@ -80,6 +82,7 @@ void glCompileShader(GLuint);
 void glGetShaderiv(GLuint, GLenum, GLint*);
 void glGetShaderInfoLog(GLuint, GLsizei, GLsizei*, GLchar*);
 GLuint glCreateProgram(void);
+void glDeleteProgram(GLuint):
 void glAttachShader(GLuint, GLuint);
 void glLinkProgram(GLuint);
 void glGetProgramiv(GLuint, GLenum, GLint*);

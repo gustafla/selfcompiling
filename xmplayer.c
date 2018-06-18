@@ -3,11 +3,9 @@
 //
 // HUGE THANKS TO ARTEFACT2 FOR CREATING SUCH A GREAT PLAYER
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <math.h>
-#include <string.h>
+#ifdef DEBUG
+#include "includes.c"
+#endif
 
 void memcpy_pad(void* dst, size_t dst_len, const void* src, size_t src_len, size_t offset) {
     uint8_t* dst_c = dst;

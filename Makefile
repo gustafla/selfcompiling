@@ -8,7 +8,7 @@ LDLIBS=$(shell pkg-config --libs $(PKGS)) -lm
 
 # shaders.h.out has to be excluded because trim can't deal with it
 # music.xm.c has to be excluded because minify can't deal with it
-SOURCES=xmplayer.c main.c
+SOURCES=includes.c xmplayer.c gl.c demo.c main.c
 CAT_SRC=$(TARGET).out
 
 LAUNCHER=launcher.sh
